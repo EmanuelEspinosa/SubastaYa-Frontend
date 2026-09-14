@@ -1,0 +1,155 @@
+.cardProduct {
+    width: 22rem;
+    min-height: 34rem;
+    background: radial-gradient(circle at top left, #1e1e2f, #12121a);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cardProduct:hover {
+    transform: translateY(-6px);
+}
+
+.product-img {
+    position: relative; /* Permite posicionar el badge en la esquina superior */
+    height: 15rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2a2a3d;
+    border-radius: 12px;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.product-img > img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+/* Badge de Estado */
+.status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.estado-activa {
+    background-color: #00e676;
+    color: #12121a;
+}
+
+.estado-pendiente {
+    background-color: #ffb300;
+    color: #12121a;
+}
+
+.estado-finalizada {
+    background-color: #ff5252;
+    color: #ffffff;
+}
+
+.product-info {
+    width: 100%;
+    padding: 0 1.5rem 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.product-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #f0f0f0;
+    margin-bottom: 0.3rem;
+    text-align: center;
+}
+
+.brand {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 0.3rem;
+}
+
+.category {
+    font-size: 0.9rem;
+    color: #00bfff;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.feature {
+    font-size: 0.8rem;
+    color: #ccc;
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+.section-precio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+}
+
+.section-priceReal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0.6rem 0 0.4rem 0;
+}
+
+.price-label {
+    font-size: 0.85rem;
+    color: #bbb;
+}
+
+.price-tag {
+    background-color: #00bfff;
+    color: #1e1e2f;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: inline-block;
+}
+
+.bids-count {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-top: 0.3rem;
+}
+
+.detail-button {
+    margin-top: 1rem;
+    background-color: transparent;
+    border: 1px solid #00bfff;
+    color: #00bfff;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.detail-button:hover {
+    background-color: #00bfff;
+    color: #1e1e2f;
+    font-weight: 700;
+}
