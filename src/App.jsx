@@ -16,6 +16,7 @@ function App() {
         <Routes>
           <Route element={<MainLayout />}>
             <Route path='/' element={<Home />}/>
+            <Route path="categoria/:categoriaId" element={<Home />} />
           </Route>
         </Routes>
       </BrowserRouter>

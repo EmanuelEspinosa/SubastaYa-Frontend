@@ -1,4 +1,5 @@
 import { SliderContainer } from "../../layout/Slider/SliderContainer/SliderContainer";
+import { ItemListContainer } from "../ItemListContainer/ItemListContainer";
 
 export const Home = () => {
     const slides = [
@@ -13,10 +14,11 @@ export const Home = () => {
         ),
     ];
 
-    
+
     return(
         <div className="container-page">
             <SliderContainer slides={slides} />
+            <ItemListContainer />
         </div>
     );
 }

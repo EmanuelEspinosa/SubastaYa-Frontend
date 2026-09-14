@@ -11,7 +11,7 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #940731;
+    background-color: #141436;
     z-index: 1000;
 }
 
@@ -58,7 +58,8 @@ header .navbar .nav-ul li a {
 
 .navbar .nav-ul li a:hover {
     transition: .3s; 
-    box-shadow: inset 0 -5px 0 #fffdfd; 
+    box-shadow: inset 0 -5px 0 #00bfff;
+    color: #00bfff; 
 }
 
 
