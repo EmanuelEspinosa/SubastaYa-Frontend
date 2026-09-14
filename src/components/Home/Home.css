@@ -1,0 +1,13 @@
+.container-page {
+    background-color: #EEE;
+    padding-bottom: 4rem;
+    padding-top: 1rem;
+}
+
+.slider_content-item1 img {
+    width: 200%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 8px;
+}
