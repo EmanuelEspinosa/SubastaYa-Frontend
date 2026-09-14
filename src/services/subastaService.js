@@ -41,3 +41,11 @@ export const createSubasta = async (subastaData) => {
 
     return await res.json();
 };
+
+export const getHistorialPujas = async (id) => {
+    const response = await fetch(`https://localhost:7000/api/auctions/${id}/bids`);
+    if (!response.ok) {
+        throw new Error("Error al obtener el historial de pujas");
+    }
+    return await response.json();
+};
