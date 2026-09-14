@@ -12,7 +12,7 @@ export const Header = () => {
         <header>
             <Link to={"/"}>
                 <section className="logo_header">
-                    <img src="#" alt="Logo comercio" />
+                    <img src="/images/Logo/iconoEmpresa1.jpg" alt="Logo comercio" />
                     <p>SUBASTA YA</p>
                 </section>
             </Link>
@@ -42,7 +42,7 @@ export const Header = () => {
                                     className="nav-item"
                                     to={"/products"}
                                     onClick={menuMovil ? () => SetMenuMovil(!menuMovil) : ""}>
-                                    Productos
+                                    Subastas
                                 </Link>
                             </li>
                             <li>
