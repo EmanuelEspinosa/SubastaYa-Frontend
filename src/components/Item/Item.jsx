@@ -23,12 +23,14 @@ export const Item = ({
 
     const getEstadoInfo = (estadoNum) => {
         switch (estadoNum) {
+            case 1: 
+                return { texto: "Programada", clase: "estado-programada" };
             case 2:
                 return { texto: "Activa", clase: "estado-activa" };
             case 3:
                 return { texto: "Finalizada", clase: "estado-finalizada" };
             default:
-                return { texto: "Pendiente", clase: "estado-pendiente" };
+                return { texto: "Desierta", clase: "estado-desierta" };
         }
     };
 

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-    faTimes, 
-    faLock, 
-    faShieldHalved, 
-    faClock, 
-    faGavel, 
-    faUserCheck, 
+import {
+    faTimes,
+    faLock,
+    faShieldHalved,
+    faClock,
+    faGavel,
+    faUserCheck,
     faExclamationTriangle,
     faHistory,
-    faWallet
+    faWallet,
+    faBan
 } from "@fortawesome/free-solid-svg-icons";
 import { ConfirmModal } from "../../layout/ConfirmModal/ConfirmModal";
 import "./ItemDetail.css";
@@ -27,14 +28,17 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
         precioBase,
         incrementoMinimo = 1000,
         cantidadOfertas = 0,
-        estado,
+        estado, // Enum: 1=Programada, 2=Activa, 3=Finalizada, 4=Desierta
+        fechaInicio,
         fechaFin,
         esMiOfertaLaMasAlta = false
     } = detail;
 
-    // Prioriza el array devuelto por el endpoint GET /api/auctions/{id}/bids
-    const ofertasList = historialPujas.length > 0 
-        ? historialPujas 
+    const estadoNum = Number(estado) || 1;
+
+    // Historial de ofertas
+    const ofertasList = historialPujas.length > 0
+        ? historialPujas
         : (detail.historialOfertas || detail.ofertas || detail.pujas || detail.bids || []);
 
     const precioActual = ofertaMasAltaActual || precioBase;
@@ -45,17 +49,17 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
     const [confirmMessage, setConfirmMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Temporizador
+    // Cuenta regresiva (solo activa si estado === 2)
     const [timeLeft, setTimeLeft] = useState({
         hours: "00",
         minutes: "00",
         seconds: "00",
         isCritical: false,
-        isEnded: estado === 3
+        isEnded: estadoNum === 3 || estadoNum === 4
     });
 
     useEffect(() => {
-        if (!fechaFin || estado === 3) return;
+        if (estadoNum !== 2 || !fechaFin) return;
 
         const interval = setInterval(() => {
             const now = new Date().getTime();
@@ -82,7 +86,7 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [fechaFin, estado]);
+    }, [fechaFin, estadoNum]);
 
     const formatCurrency = (val) => {
         return new Intl.NumberFormat("es-AR", {
@@ -117,35 +121,83 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
         }, 1000);
     };
 
+    // Función auxiliar para texto del Badge de Estado
+    const getBadgeText = (st) => {
+        switch (st) {
+            case 1: return "Próximamente";
+            case 2: return "🔴 Subasta en Vivo";
+            case 3: return "Finalizada";
+            case 4: return "Desierta";
+            default: return "Próximamente";
+        }
+    };
+
     return (
         <section className="item-detail">
             <Link className="icono-cierreCard" to="/">
                 <FontAwesomeIcon icon={faTimes} size="2x" />
             </Link>
 
-            {/* COLUMNA 1: IMAGEN */}
-            <div className="item-detail__image">
-                <img src={urlImagen || "/images/placeholder.png"} alt={titulo} />
-                <div className={`status-badge-detail estado-${estado}`}>
-                    {estado === 2 ? "🔴 Subasta en Vivo" : estado === 3 ? "Finalizada" : "Próximamente"}
+            {/* COLUMNA 1: IMAGEN Y DESCRIPCIÓN */}
+            <div className="columna1">
+                <div className="titulo">
+                    <h3>Categoria : {categoriaNombre}</h3>
+                    <h2>{titulo}</h2>
+                </div>
+                <div className="item-detail__image">
+                    <img src={urlImagen || "/images/placeholder.png"} alt={titulo} />
+                    <div className={`status-badge-detail estado-${estadoNum}`}>
+                        {getBadgeText(estadoNum)}
+                    </div>
+                </div>
+                <div className="description-section">
+                    <h3>Descripción del Artículo</h3>
+                    <p className="item-detail__feature">{descripcion}</p>
                 </div>
             </div>
 
-            {/* COLUMNA 2: INFORMACIÓN PRINCIPAL Y DESCRIPCIÓN */}
+            {/* COLUMNA 2: INFORMACIÓN PRINCIPAL Y CONSOLA */}
             <div className="product-price-pay">
-                <h3>Vendedor: {vendedorNombre || "Anónimo"} · {categoriaNombre}</h3>
-                <h2>{titulo}</h2>
+                <h3 className="product-price__vendedor">Vendedor: {vendedorNombre || "Anónimo"}</h3>
+                
+                {/* TEMPORIZADOR SEGÚN CADA ESTADO */}
+                {estadoNum === 1 && (
+                    <div className="timer-banner timer-upcoming">
+                        <FontAwesomeIcon icon={faClock} />
+                        <span>
+                            {fechaInicio && new Date(fechaInicio) > new Date()
+                                ? `Inicio programado: ${new Date(fechaInicio).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })} hs`
+                                : "Subasta Programada"}
+                        </span>
+                    </div>
+                )}
 
-                <div className={`timer-banner ${timeLeft.isCritical ? "timer-critical" : ""}`}>
-                    <FontAwesomeIcon icon={faClock} />
-                    <span>
-                        {timeLeft.isEnded
-                            ? "Tiempo Agotado"
-                            : `Tiempo Restante: ${timeLeft.hours}h : ${timeLeft.minutes}m : ${timeLeft.seconds}s`}
-                    </span>
-                </div>
+                {estadoNum === 2 && !timeLeft.isEnded && (
+                    <div className={`timer-banner ${timeLeft.isCritical ? "timer-critical" : ""}`}>
+                        <FontAwesomeIcon icon={faClock} />
+                        <span>
+                            Tiempo Restante: {timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
+                        </span>
+                    </div>
+                )}
+
+                {estadoNum === 3 && (
+                    <div className="timer-banner timer-ended">
+                        <FontAwesomeIcon icon={faClock} />
+                        <span>Subasta Finalizada - Con Ganador</span>
+                    </div>
+                )}
+
+                {(estadoNum === 4 || (estadoNum === 2 && timeLeft.isEnded)) && (
+                    <div className="timer-banner timer-deserted">
+                        <FontAwesomeIcon icon={faBan} />
+                        <span>Subasta Desierta - Sin Ofertas</span>
+                    </div>
+                )}
 
                 <div className="container-price">
+                    
+
                     <div className="price-main">
                         <span className="price-label">
                             {cantidadOfertas > 0 ? "Oferta Más Alta Actual:" : "Precio Base de Salida:"}
@@ -153,7 +205,7 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                         <p className="item-detail__price">{formatCurrency(precioActual)}</p>
                     </div>
 
-                    {estado === 2 && (
+                    {estadoNum === 2 && (
                         <div className={`leader-badge ${esMiOfertaLaMasAlta ? "badge-leading" : "badge-outbid"}`}>
                             <FontAwesomeIcon icon={esMiOfertaLaMasAlta ? faUserCheck : faExclamationTriangle} />
                             <span>{esMiOfertaLaMasAlta ? "¡Vas Liderando!" : "Fuiste Superado"}</span>
@@ -161,7 +213,7 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                     )}
                 </div>
 
-                {estado === 2 && !timeLeft.isEnded ? (
+                {estadoNum === 2 && !timeLeft.isEnded ? (
                     <form onSubmit={handleFormSubmit} className="bidding-console">
                         <label>
                             Tu Oferta Directa (Mínimo: <strong>{formatCurrency(pujaMinimaSugerida)}</strong>):
@@ -191,19 +243,16 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                     </form>
                 ) : (
                     <div className="closed-auction-notice">
-                        <FontAwesomeIcon icon={faLock} size="2x" />
-                        <p>{estado === 3 ? "Esta subasta ya finalizó. No se aceptan más ofertas." : "Esta subasta aún no ha comenzado."}</p>
+                        <FontAwesomeIcon icon={estadoNum === 4 ? faBan : faLock} size="2x" />
+                        <p>
+                            {estadoNum === 1 && "Esta subasta aún no ha comenzado."}
+                            {estadoNum === 3 && "Esta subasta ya finalizó. No se aceptan más ofertas."}
+                            {estadoNum === 4 && "Esta subasta finalizó sin ofertas recibidas (Desierta)."}
+                            {estadoNum === 2 && timeLeft.isEnded && "El tiempo reglamentario ha concluido."}
+                        </p>
                     </div>
                 )}
 
-                <div className="description-section">
-                    <h4>Descripción del Artículo</h4>
-                    <p className="item-detail__feature">{descripcion}</p>
-                </div>
-            </div>
-
-            {/* COLUMNA 3: HISTORIAL Y GARANTÍAS */}
-            <div className="product-information">
                 <div className="bids-history-section">
                     <h4>
                         <FontAwesomeIcon icon={faHistory} /> Historial de Ofertas ({ofertasList.length || cantidadOfertas})
@@ -219,18 +268,24 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                                         <span className="bid-amount">{formatCurrency(bid.monto)}</span>
                                     </div>
                                     <span className="bid-time">
-                                        {bid.fechaPuja || bid.fechaHora 
-                                            ? new Date(bid.fechaPuja || bid.fechaHora).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" }) 
+                                        {bid.fechaPuja || bid.fechaHora
+                                            ? new Date(bid.fechaPuja || bid.fechaHora).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })
                                             : "Reciente"}
                                     </span>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="no-bids-text">Aún no hay ofertas registradas. ¡Sé el primero en pujar!</p>
+                        <p className="no-bids-text">Aún no hay ofertas registradas.</p>
                     )}
                 </div>
+            </div>
 
+            {/* COLUMNA 3: HISTORIAL Y GARANTÍAS */}
+            <div className="product-information">
+                <div className="logo-empresa">
+                    <img src="../../public/images/Logo/iconoEmpresa2.jpg"/>
+                </div>
                 <div className="info-pay">
                     <div className="info-pay_item">
                         <FontAwesomeIcon icon={faLock} className="icon-info-pay" />
@@ -256,19 +311,16 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                 </div>
 
                 <div className="share-product">
-                    <h5>Comparte esta subasta</h5>
+                    <h3>Comparte esta subasta</h3>
                     <div className="share-product-imgRedes">
                         <Link className="item-share" to="https://facebook.com" target="_blank">
-                            <img src="/images/RedesSociales/logosAlternativos/facebook.png" alt="Facebook" />
+                            <img src="../../images/RedesSociales/Facebook.png" alt="Facebook" />
                         </Link>
                         <Link className="item-share" to="https://instagram.com" target="_blank">
-                            <img src="/images/RedesSociales/logosAlternativos/instagram.png" alt="Instagram" />
+                            <img src="../../images/RedesSociales/Instagram.png" alt="Instagram" />
                         </Link>
                         <Link className="item-share" to="https://twitter.com" target="_blank">
-                            <img src="/images/RedesSociales/logosAlternativos/twitter.png" alt="Twitter" />
-                        </Link>
-                        <Link className="item-share" to="https://whatsapp.com" target="_blank">
-                            <img src="/images/RedesSociales/logosAlternativos/whatsapp.png" alt="WhatsApp" />
+                            <img src="../../images/RedesSociales/Twitter-nuevo.png" alt="Twitter" />
                         </Link>
                     </div>
                 </div>

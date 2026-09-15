@@ -1,15 +1,15 @@
 .item-detail {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 1.2fr 0.8fr;
+    grid-template-columns: 1fr 1.1fr 0.9fr;
     gap: 2rem;
-    max-width: 1300px;
+    width: 95%;
+    max-width: 1500px;
     margin: 2rem auto;
-    padding: 2rem;
+    padding: 3.5rem;
     background: radial-gradient(circle at top left, #1e1e2f, #12121a);
     border-radius: 20px;
     color: #f0f0f0;
-    font-family: 'Poppins', sans-serif;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
 }
 
@@ -25,12 +25,30 @@
     color: #ff5252;
 }
 
-/* COLUMNA 1: IMAGEN */
+/* COLUMNA 1: IMAGEN Y DETALLE*/
+.columna1{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.columna1 > .titulo{
+    margin-bottom: .5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .7rem;
+}
+
 .item-detail__image {
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
     background-color: #2a2a3d;
     border-radius: 15px;
     padding: 1.5rem;
@@ -53,13 +71,34 @@
     font-weight: bold;
     text-transform: uppercase;
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    z-index: 10;
 }
 
-.estado-2 { background-color: #00e676; color: #12121a; }
-.estado-1 { background-color: #ffb300; color: #12121a; }
-.estado-3 { background-color: #ff5252; color: #fff; }
+.description-section {
+    /* background-color: #191926; */
+    padding: 1.2rem;
+    border-radius: 12px;
+    border: 1px solid #2a2a3d;
+    margin-top: 1rem;
+}
+
+.description-section h3 {
+    color: #00bfff;
+    margin-bottom: 0.5rem;
+    
+}
+
+.description-section p{
+    text-align: justify;
+    font-size: 1rem;
+    
+}
 
 /* TEMPORIZADOR */
+.product-price__vendedor{
+    text-align: start;
+}
+
 .timer-banner {
     display: flex;
     align-items: center;
@@ -89,18 +128,19 @@
 /* PRECIOS Y BADGE LIDERANDO */
 .container-price {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: start;
     margin: 1rem 0;
 }
 
+
 .price-label {
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: #aaa;
 }
 
 .item-detail__price {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 800;
     color: #00bfff;
 }
@@ -136,7 +176,7 @@
 }
 
 .bidding-console label {
-    font-size: 0.85rem;
+    font-size: 1rem;
     color: #ccc;
     display: block;
     margin-bottom: 0.5rem;
@@ -210,61 +250,61 @@
 /* HISTORIAL DE OFERTAS */
 .bids-history-section {
     background-color: #252538;
-    padding: 1rem;
+    padding: 1.2rem;
     border-radius: 12px;
     margin-bottom: 1.5rem;
 }
 
 .bids-history-section h4 {
     color: #00bfff;
-    font-size: 0.95rem;
+    font-size: 1.2rem;
     margin-bottom: 0.8rem;
 }
 
 .bids-list {
     list-style: none;
     padding: 0;
-    max-height: 180px;
+    max-height: 200px;
     overflow-y: auto;
 }
 
 .bids-list li {
     display: flex;
-    justify-content: space-between;
-    padding: 0.5rem;
-    font-size: 0.85rem;
+    flex-direction: column;
+    padding: 0.6rem;
+    font-size: 1.1rem;
     border-bottom: 1px solid #333;
+}
+
+.bid-info-main {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.bid-amount {
+    color: #00e676;
+}
+
+.bid-time {
+    font-size: .9rem;
+    color: #888;
+    margin-top: 0.2rem;
 }
 
 .top-bid {
     background-color: rgba(0, 191, 255, 0.1);
-    font-weight: bold;
-    color: #00bfff;
+    border-left: 3px solid #00bfff;
+    border-radius: 10px;
 }
 
-/* MODAL OVERLAY */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+.no-bids-text {
+    font-size: 0.85rem;
+    color: #aaa;
+    text-align: center;
+    padding: 1rem 0;
 }
 
-.modal-content {
-    background-color: #1e1e2f;
-    padding: 2rem;
-    border-radius: 16px;
-    max-width: 450px;
-    width: 90%;
-    border: 1px solid #00bfff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-}
 
 .modal-actions {
     display: flex;
@@ -300,135 +340,15 @@
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.item-detail {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1.1fr 0.9fr;
-    gap: 2rem;
-    max-width: 1350px;
-    margin: 2rem auto;
-    padding: 2.5rem 2rem 2rem;
-    background: radial-gradient(circle at top left, #1e1e2f, #12121a);
-    border-radius: 20px;
-    color: #f0f0f0;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-}
-
-.icono-cierreCard {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    color: #aaa;
-    transition: color 0.3s ease;
-}
-
-.icono-cierreCard:hover {
-    color: #ff5252;
-}
-
-.item-detail__image {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #2a2a3d;
-    border-radius: 15px;
-    padding: 1.5rem;
-    min-height: 380px;
-    align-self: start;
-}
-
-.item-detail__image img {
-    max-width: 100%;
-    max-height: 320px;
-    object-fit: contain;
-}
-
-.status-badge-detail {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.estado-2 { background-color: #00e676; color: #12121a; }
-.estado-1 { background-color: #ffb300; color: #12121a; }
-.estado-3 { background-color: #ff5252; color: #fff; }
-
-.timer-banner {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    background-color: #2a2a3d;
-    padding: 0.8rem 1.2rem;
+ .logo-empresa > img{
+    width: 100%;
     border-radius: 10px;
-    margin: 1rem 0;
-    font-weight: bold;
-    color: #00bfff;
-    border-left: 4px solid #00bfff;
-}
+ }
 
-.timer-critical {
-    background-color: #3b1e2b;
-    color: #ff5252;
-    border-left-color: #ff5252;
-}
-
-.container-price {
+.product-information{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 1rem 0;
-}
-
-.price-label {
-    font-size: 0.85rem;
-    color: #aaa;
-}
-
-.item-detail__price {
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: #00bfff;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .closed-auction-notice {
@@ -446,81 +366,12 @@
     font-weight: bold;
 }
 
-.description-section {
-    background-color: #191926;
-    padding: 1.2rem;
-    border-radius: 12px;
-    border: 1px solid #2a2a3d;
-    margin-top: 1rem;
-}
-
-.description-section h4 {
-    color: #00bfff;
-    margin-bottom: 0.5rem;
-}
-
 .item-detail__feature {
     color: #ccc;
     font-size: 0.9rem;
     line-height: 1.5;
 }
 
-/* HISTORIAL DE OFERTAS */
-.bids-history-section {
-    background-color: #252538;
-    padding: 1.2rem;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-}
-
-.bids-history-section h4 {
-    color: #00bfff;
-    font-size: 0.95rem;
-    margin-bottom: 0.8rem;
-}
-
-.bids-list {
-    list-style: none;
-    padding: 0;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.bids-list li {
-    display: flex;
-    flex-direction: column;
-    padding: 0.6rem;
-    font-size: 0.85rem;
-    border-bottom: 1px solid #333;
-}
-
-.bid-info-main {
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-}
-
-.bid-amount {
-    color: #00e676;
-}
-
-.bid-time {
-    font-size: 0.75rem;
-    color: #888;
-    margin-top: 0.2rem;
-}
-
-.top-bid {
-    background-color: rgba(0, 191, 255, 0.1);
-    border-left: 3px solid #00bfff;
-}
-
-.no-bids-text {
-    font-size: 0.85rem;
-    color: #aaa;
-    text-align: center;
-    padding: 1rem 0;
-}
 
 /* GARANTÍAS Y PAGOS */
 .info-pay {
@@ -542,6 +393,10 @@
     margin-top: 0.2rem;
 }
 
+.info-pay_item > div{
+    text-align: start;
+}
+
 .info-pay_item h4 {
     font-size: 0.85rem;
     color: #fff;
@@ -552,8 +407,15 @@
     color: #aaa;
 }
 
-.share-product h5 {
-    font-size: 0.85rem;
+.share-product{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.share-product h3 {
+    font-size: 1rem;
     color: #aaa;
     margin-bottom: 0.5rem;
 }
@@ -564,12 +426,53 @@
 }
 
 .share-product-imgRedes img {
-    width: 28px;
-    height: 28px;
+    width: 35px;
+    height: 35px;
 }
 
 @media (max-width: 1024px) {
     .item-detail {
         grid-template-columns: 1fr;
     }
+}
+
+/* COLORES DE ESTADO FORZADOS */
+.estado-1 {
+    background-color: #ffb300 !important;
+    color: #12121a !important;
+}
+
+.estado-2 {
+    background-color: #00e676 !important;
+    color: #12121a !important;
+}
+
+.estado-3 {
+    background-color: #ff5252 !important;
+    color: #ffffff !important;
+}
+
+/* ESTADO 4: DESIERTA */
+.estado-4 {
+    background-color: #616161 !important;
+    color: #ffffff !important;
+}
+
+.timer-deserted {
+    background-color: #2c2c3e;
+    color: #b0bec5;
+    border-left: 4px solid #78909c;
+}
+
+/* BANNER DE PRÓXIMAMENTE Y FINALIZADO */
+.timer-upcoming {
+    background-color: #2a2a3d;
+    color: #00bfff;
+    border-left: 4px solid #00bfff;
+}
+
+.timer-ended {
+    background-color: #38252a;
+    color: #ff5252;
+    border-left: 4px solid #ff5252;
 }
