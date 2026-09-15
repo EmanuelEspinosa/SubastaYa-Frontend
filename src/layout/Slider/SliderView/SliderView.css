@@ -1,0 +1,168 @@
+.slider {
+    width: 96vw;
+    aspect-ratio: 16 / 9;
+    max-height: 80vh;
+    margin: auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.slider .slider_content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 95%;
+    display: flex;
+    width: max-content;
+    transition: 1s;
+}
+
+.slider_content .item {
+    display: flex;
+    width: 96vw;
+    height: 100%;
+    padding-inline: 4vw;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+
+}
+
+/*--------  PRIMER SLIDE  -------*/
+
+.slider_content-item1 {
+    background-image: url("/images/Slides/banner2.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
+/*--------  SEGUNDO SLIDE  -------*/
+.slider_content-item2 {
+    background-image: url("/images/Slides/banner3.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+
+/*---- TERCER SLIDE ----*/
+
+.slider_content-item3 {
+    background-image: url("/images/Slides/banner1.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.buttons {
+    position: absolute;
+    top: 43%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons>button {
+    width: 50px;
+    height: 50px;
+
+    background-color: #1d1c1c00;
+    border: none;
+    font-family: monospace;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#prev {
+    color: #ffffff;
+    font-size: 3rem;
+}
+
+#next {
+    color: #ffffff;
+    font-size: 3rem;
+}
+
+
+
+.dots {
+    position: absolute;
+    bottom: 0;
+    color: #FFF;
+    left: 0;
+    width: 100%;
+    height: max-content;
+    padding: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background-color: #1d1c1cbd;
+}
+
+.dots li {
+    list-style: none;
+    width: .8rem;
+    height: .8rem;
+    background-color: #FFF;
+    border-radius: 20px;
+    transition: 1s;
+    cursor: pointer;
+}
+
+.dots li.active {
+    width: 30px;
+}
+
+.slider_content {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.item {
+    min-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .buttons{
+        top: 40%;
+    }
+
+    #prev {
+        color: #ffffff;
+        font-size: 1.5rem;
+    }
+
+    #next {
+        color: #ffffff;
+        font-size: 1.5rem;
+    }
+
+    .dots {
+        background-color: rgb(33, 37, 41);
+        
+    }
+
+    .dots li {
+        list-style: none;
+        width: .5rem;
+        height: .5rem;
+        background-color: #FFF;
+
+        border-radius: 20px;
+        transition: 1s;
+        cursor: pointer;
+    }
+
+    .dots li.active {
+        width: 30px;
+    }
+}
