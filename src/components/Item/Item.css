@@ -54,7 +54,7 @@
     color: #12121a;
 }
 
-.estado-pendiente {
+.estado-programada {
     background-color: #ffb300;
     color: #12121a;
 }
@@ -62,6 +62,12 @@
 .estado-finalizada {
     background-color: #ff5252;
     color: #ffffff;
+}
+
+.estado-desierta{
+    background-color: #555;
+    
+
 }
 
 .product-info {
