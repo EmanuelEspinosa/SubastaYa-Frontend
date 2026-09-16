@@ -147,6 +147,103 @@ header .iconMenuMovil {
 
 
 
+
+
+
+/* --- Contenedor e Interacción del Dropdown de Usuario --- */
+.user-dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.user-dropdown-btn {
+  background: transparent;
+  border: 1px solid #00bfff;
+  color: #00bfff;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.user-dropdown-btn:hover {
+  background-color: rgba(0, 191, 255, 0.1);
+}
+
+.icon-chevron {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.icon-chevron.rotate {
+  transform: rotate(180deg);
+}
+
+/* --- Menú Flotante (Desktop) --- */
+.user-dropdown-menu {
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background-color: #1a1a40;
+  border: 1px solid #2e2e66;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  width: 220px;
+  display: none;
+  flex-direction: column;
+  padding: 0.5rem 0;
+  z-index: 1050;
+}
+
+.user-dropdown-menu.show {
+  display: flex;
+
+}
+
+.dropdown-item {
+  color: #ffffff;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  color: #00bfff;
+}
+
+.dropdown-item.logout {
+  color: #ff5252;
+}
+
+.dropdown-item.logout:hover {
+  background-color: rgba(255, 82, 82, 0.15);
+  color: #ff5252;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #2e2e66;
+  margin: 0.4rem 0;
+}
+
+
 @media (max-width: 768px) {
 
     header .iconMenuMovil {
@@ -202,5 +299,25 @@ header .iconMenuMovil {
     .btn-logout {
         margin: 10px auto;
     }
+
+    .user-dropdown-container {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .user-dropdown-btn {
+    width: 90%;
+    justify-content: center;
+    margin: 10px auto;
+  }
+
+  .user-dropdown-menu {
+    position: static;
+    width: 90%;
+    box-shadow: none;
+    background-color: #12122b;
+    border: 1px solid #333366;
+    margin-bottom: 10px;
+  }
     
 }

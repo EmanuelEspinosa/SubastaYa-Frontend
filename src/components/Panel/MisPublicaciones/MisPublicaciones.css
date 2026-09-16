@@ -1,0 +1,122 @@
+.publicaciones-module {
+  padding: 0.5rem 0;
+}
+
+.publicaciones-loading {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.publicaciones-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.publicaciones-empty-text {
+  color: #6c757d;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* Tabla personalizada */
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.custom-table th {
+  background-color: #f8f9fa;
+  color: #141436;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.custom-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.custom-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #fdfdfd;
+}
+
+/* Miniatura del Producto */
+.subasta-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.subasta-thumb-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #e9ecef;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #6c757d;
+  text-align: center;
+}
+
+.subasta-titulo {
+  font-weight: 600;
+  color: #141436;
+  font-size: 0.95rem;
+}
+
+/* Badges de Estado */
+.badge-estado {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge-estado.activa {
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.badge-estado.finalizada {
+  background-color: #e2e3e5;
+  color: #383d41;
+  border: 1px solid #d6d8db;
+}
+
+/* Botones de acción */
+.btn-ver-subasta {
+  color: #141436;
+  border: 1.5px solid #141436;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.btn-ver-subasta:hover {
+  background-color: #141436;
+  color: #ffffff;
+}
