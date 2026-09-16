@@ -30,6 +30,14 @@
   border-spacing: 0;
 }
 
+.img_title{
+  display: flex;
+  gap: .7rem;
+  align-items: center;
+}
+
+
+
 .custom-table th {
   background-color: #f8f9fa;
   color: #141436;
@@ -82,8 +90,12 @@
   font-size: 0.95rem;
 }
 
-/* Badges de Estado */
-.badge-estado {
+
+/*RESULTADO*/
+.activa_ganando{
+  background-color: #02b352;
+  border: 1px solid #d6d8db;
+  color: #FFF;
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -91,16 +103,35 @@
   display: inline-block;
 }
 
-.badge-estado.activa {
-  background-color: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeeba;
+.activa_superada{
+  background-color: #7a8302;
+  border: 1px solid #131920;
+  color: #FFF;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
 }
 
-.badge-estado.finalizada {
-  background-color: #e2e3e5;
-  color: #383d41;
-  border: 1px solid #d6d8db;
+.subasta_ganada{
+  background-color: #047000;
+  color: #FFF;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.subasta_perdida{
+  background-color: #70000f;
+  color: #FFF;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
 }
 
 /* Botones de acción */
@@ -136,3 +167,4 @@
   background-color: #b02e00;
   color: #ffffff;
 }
+

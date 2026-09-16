@@ -50,28 +50,26 @@ export const MisPujas = () => {
   return (
     <div className="pujas-module">
       <div className="table-responsive">
-        <table className="table align-middle custom-table">
+        <table className="custom-table">
           <thead>
             <tr>
-              <th>Producto</th>
+              <th id="th_primero">Producto</th>
               <th>Precio Base</th>
               <th>Oferta Actual</th>
               <th>Estado</th>
               <th>Resultado</th>
-              <th>Acción</th>
+              <th id="th_ultimo">Acción</th>
             </tr>
           </thead>
           <tbody>
             {compras.map((subasta) => {
               const precioMuestra = subasta.ofertaMasAltaActual ?? subasta.precioBase;
-              const estadoNombre = typeof subasta.estado === "string" 
-                ? subasta.estado 
-                : (subasta.estado === 2 ? "Activa" : subasta.estado === 3 ? "Finalizada" : subasta.estado === 4 ? "Desierta" : "Programada");
+              const estadoNombre = (subasta.estado === 2 ? "Activa" : "Finalizada");
 
               return (
                 <tr key={subasta.id}>
                   <td>
-                    <div>
+                    <div className="img_title">
                       {subasta.urlImagen ? (
                         <img
                           src={subasta.urlImagen}
@@ -86,29 +84,35 @@ export const MisPujas = () => {
                       <span className="subasta-titulo">{subasta.titulo}</span>
                     </div>
                   </td>
-                  <td>
+                  <td className="precio_base">
                     ${subasta.precioBase?.toLocaleString("es-AR")}
                   </td>
-                  <td>
+                  <td className="oferta_actual">
                     ${precioMuestra?.toLocaleString("es-AR")}
                   </td>
                   <td>
                     <span
                       className={`badge-estado ${
-                        estadoNombre.toLowerCase() === "activa" || estadoNombre === "0"
-                          ? "activa"
-                          : "finalizada"
+                        estadoNombre === "Activa" ? "activa" : estadoNombre === "Programada" ? "programada" : estadoNombre === "Finalizada" ? "finalizada" : "desierta"
                       }`}
                     >
                       {estadoNombre}
                     </span>
                   </td>
                   <td>
-                    {
+                    {estadoNombre === "Activa" ? (
                       user?.usuarioId === subasta.compradorLiderId ? (
-                        <div>Ganada</div>
-                      ) : (<div>Perdida</div>)
-                    }
+                        <span className="activa_ganando">Vas Ganando</span>
+                      ) : (
+                        <span className="activa_superada">Te superaron</span>
+                      )
+                    ) : estadoNombre === "Finalizada" ? (
+                      user?.usuarioId === subasta.compradorLiderId ? (
+                        <span className="subasta_ganada">Ganada</span>
+                      ) : (
+                        <span className="subasta_perdida">Perdida</span>
+                      )
+                    ) : null}
                   </td>
                   <td>
                     <Link to={`/subasta/${subasta.id}`} className="btn-ver-subasta">

@@ -50,27 +50,27 @@ export const MisPublicaciones = () => {
         <table className="table align-middle custom-table">
           <thead>
             <tr>
-              <th>Producto</th>
+              <th id="th_primero">Producto</th>
               <th>Precio Base</th>
               <th>Oferta Actual</th>
               <th>Estado</th>
-              <th>Acción</th>
+              <th id="th_ultimo">Acción</th>
             </tr>
           </thead>
           <tbody>
             {publicaciones.map((pub) => {
-              const precioMuestra = pub.precioActual ?? pub.precioInicial;
+              const precioMuestra = pub.ofertaMasAltaActual ?? pub.precioBase;
               const estadoNombre = typeof pub.estado === "string" 
                 ? pub.estado 
-                : (pub.estado === 0 ? "Activa" : pub.estado === 1 ? "Finalizada" : "Cancelada");
+                : (pub.estado === 1 ? "Programada" : pub.estado === 2 ? "Activa" : pub.estado === 3 ? "Finalizada" :"Desierta");
 
               return (
                 <tr key={pub.id}>
                   <td>
-                    <div className="d-flex align-items-center gap-3">
-                      {pub.imagenUrl ? (
+                    <div className="img_title">
+                      {pub.urlImagen ? (
                         <img
-                          src={pub.imagenUrl}
+                          src={pub.urlImagen}
                           alt={pub.titulo}
                           className="subasta-thumb"
                         />
@@ -82,18 +82,16 @@ export const MisPublicaciones = () => {
                       <span className="subasta-titulo">{pub.titulo}</span>
                     </div>
                   </td>
-                  <td className="text-muted fw-semibold">
-                    ${pub.precioInicial?.toLocaleString("es-AR")}
+                  <td className="precio_base">
+                    ${pub.precioBase?.toLocaleString("es-AR")}
                   </td>
-                  <td className="text-success fw-bold">
+                  <td className="oferta_actual">
                     ${precioMuestra?.toLocaleString("es-AR")}
                   </td>
                   <td>
                     <span
                       className={`badge-estado ${
-                        estadoNombre.toLowerCase() === "activa" || estadoNombre === "0"
-                          ? "activa"
-                          : "finalizada"
+                        estadoNombre === "Activa" ? "activa" : estadoNombre === "Programada" ? "programada" : estadoNombre === "Finalizada" ? "finalizada" : "desierta"
                       }`}
                     >
                       {estadoNombre}
