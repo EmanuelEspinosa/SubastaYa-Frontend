@@ -1,7 +1,18 @@
+.loading_wallet{
+  height: 35vh;
+  font-weight: 700;
+}
+
+
 .billetera-module {
-  max-width: 700px;
   margin: 0 auto;
   padding: 0.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.saldos-wallet{
+  flex: 1;
 }
 
 /* Tarjetas de Saldo */
@@ -52,12 +63,25 @@
   border: 1px solid #e9ecef;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   padding: 1.75rem;
+  flex: 1;
 }
 
 .recarga-title {
   color: #141436;
   font-weight: 700;
   margin-bottom: 1.25rem;
+  border-bottom: 2px solid #141436;
+}
+
+.form_recarga{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.form_recarga > label{
+  font-weight: 700;
 }
 
 .recarga-input {
@@ -82,7 +106,7 @@
   padding: 0.8rem;
   font-weight: 600;
   font-size: 1rem;
-  width: 100%;
+  width: 90%;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -94,4 +118,84 @@
 .recarga-btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.recarga-title {
+  color: #141436;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid #141436;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-group-wallet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.form-label-wallet {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #141436;
+}
+
+/* Chips de Montos Rápidos */
+.montos-rapidos {
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.montos-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.montos-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-btn {
+  background-color: #f1f3f5;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #141436;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip-btn:hover {
+  background-color: #141436;
+  color: #ffffff;
+  border-color: #141436;
+}
+
+.select-wallet {
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.recarga-info {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+@media (max-width: 768px){
+  .billetera-module{
+    flex-direction: column;
+  }
 }

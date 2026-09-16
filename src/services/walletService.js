@@ -14,7 +14,7 @@ export const getSaldo = async (usuarioId) => {
   });
 
   if (!response.ok) {
-    throw new Error("No se pudo obtener el saldo de la billetera.");
+    throw new Error(data.message || data.mensaje || "Error al realizar la recarga.");
   }
 
   return await response.json(); // Retorna { id, usuarioId, saldoTotal, saldoRetenido, saldoDisponible }
@@ -43,7 +43,7 @@ export const cargarSaldo = async (usuarioId, monto) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.mensaje || "Error al realizar la recarga.");
+    throw new Error(data.message || data.mensaje || "Error al realizar la recarga.");
   }
 
   return data;

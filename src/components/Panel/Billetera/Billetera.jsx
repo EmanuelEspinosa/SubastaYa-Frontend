@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
 import { getSaldo, cargarSaldo } from "../../../services/walletService";
+import { ConfirmModal } from "../../../layout/ConfirmModal/ConfirmModal";
 import "./Billetera.css";
 
 export const Billetera = () => {
   const { user } = useAuth();
-  
+
   const [billetera, setBilletera] = useState({
     saldoTotal: 0,
     saldoRetenido: 0,
@@ -14,8 +15,11 @@ export const Billetera = () => {
   const [montoRecarga, setMontoRecarga] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [mensaje, setMensaje] = useState(null);
-  const [error, setError] = useState(null);
+
+  // Estados para la Modal y Feedback
+  const [showModal, setShowModal] = useState(false);
+  const [modalSuccessMsg, setModalSuccessMsg] = useState(null);
+  const [modalErrorMsg, setModalErrorMsg] = useState(null);
 
   const cargarDatos = async () => {
     if (!user?.usuarioId) return;
@@ -23,7 +27,7 @@ export const Billetera = () => {
       const data = await getSaldo(user.usuarioId);
       setBilletera(data);
     } catch (err) {
-      setError(err.message);
+      console.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -33,93 +37,142 @@ export const Billetera = () => {
     cargarDatos();
   }, [user]);
 
-  const handleRecarga = async (e) => {
+  const handleOpenModal = (e) => {
     e.preventDefault();
-    setMensaje(null);
-    setError(null);
+    setModalSuccessMsg(null);
+    setModalErrorMsg(null);
+    setShowModal(true);
+  };
 
-    if (!montoRecarga || Number(montoRecarga) <= 0) {
-      setError("Ingresá un monto válido.");
-      return;
-    }
-
+  const handleConfirmarRecarga = async () => {
     setSubmitting(true);
+    setModalSuccessMsg(null);
+    setModalErrorMsg(null);
+
     try {
       await cargarSaldo(user.usuarioId, montoRecarga);
-      setMensaje(`¡Acreditación de $${montoRecarga} realizada con éxito!`);
+      
+      const msgExito = `¡Transacción realizada con éxito! Se acreditaron $${Number(montoRecarga).toLocaleString("es-AR")}.`;
+      setModalSuccessMsg(msgExito);
       setMontoRecarga("");
       await cargarDatos();
+
+      // Cierra la modal tras 2.5 segundos
+      setTimeout(() => {
+        setShowModal(false);
+        setModalSuccessMsg(null);
+      }, 2500);
+
     } catch (err) {
-      setError(err.message);
+      // Muestra la excepción de .NET dentro de la misma modal
+      setModalErrorMsg(err.message);
+
+      // Cierra la modal tras 2.5 segundos
+      setTimeout(() => {
+        setShowModal(false);
+        setModalErrorMsg(null);
+      }, 3000);
     } finally {
       setSubmitting(false);
     }
   };
 
   if (loading) {
-    return <div className="text-center py-4">Cargando estado de cuenta...</div>;
+    return <div className="loading_wallet">Cargando estado de cuenta...</div>;
   }
 
   return (
-    <div className="billetera-module" style={{ maxWidth: "650px", margin: "0 auto" }}>
-      {mensaje && <div className="alert alert-success">{mensaje}</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
-
+    <div className="billetera-module">
       {/* Desglose de saldos */}
-      <div className="row g-3 mb-4">
-        <div className="col-md-4">
-          <div className="card border-0 bg-light shadow-sm text-center p-3">
-            <span className="text-muted fw-semibold small">Disponible</span>
-            <h4 className="fw-bold text-success my-1">
-              ${billetera.saldoDisponible.toLocaleString("es-AR")}
-            </h4>
-          </div>
+      <div className="saldos-wallet">
+        <div className="saldo-card">
+          <span className="saldo-label">Disponible</span>
+          <h4 className="saldo-monto disponible">
+            ${billetera.saldoDisponible.toLocaleString("es-AR")}
+          </h4>
         </div>
-        <div className="col-md-4">
-          <div className="card border-0 bg-light shadow-sm text-center p-3">
-            <span className="text-muted fw-semibold small">Retenido (Pujas)</span>
-            <h4 className="fw-bold text-warning my-1">
-              ${billetera.saldoRetenido.toLocaleString("es-AR")}
-            </h4>
-          </div>
+
+        <div className="saldo-card">
+          <span className="saldo-label">Retenido (Pujas)</span>
+          <h4 className="saldo-monto retenido">
+            ${billetera.saldoRetenido.toLocaleString("es-AR")}
+          </h4>
         </div>
-        <div className="col-md-4">
-          <div className="card border-0 bg-light shadow-sm text-center p-3">
-            <span className="text-muted fw-semibold small">Saldo Total</span>
-            <h4 className="fw-bold text-primary my-1">
-              ${billetera.saldoTotal.toLocaleString("es-AR")}
-            </h4>
-          </div>
+
+        <div className="saldo-card">
+          <span className="saldo-label">Saldo Total</span>
+          <h4 className="saldo-monto total">
+            ${billetera.saldoTotal.toLocaleString("es-AR")}
+          </h4>
         </div>
       </div>
 
       {/* Formulario de recarga */}
-      <div className="card border-0 shadow-sm">
-        <div className="card-body p-4">
-          <h5 className="fw-bold mb-3">Recargar Billetera</h5>
-          <form onSubmit={handleRecarga}>
-            <div className="mb-3">
-              <label className="form-label fw-semibold">Monto a cargar ($)</label>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Ej: 5000"
-                value={montoRecarga}
-                onChange={(e) => setMontoRecarga(e.target.value)}
-                min="1"
-                required
-              />
+      <div className="recarga-card">
+        <h4 className="recarga-title">Recargar Saldo</h4>
+
+        <form onSubmit={handleOpenModal}>
+          <div className="form-group-wallet">
+            <label className="form-label-wallet">Monto a cargar ($)</label>
+            <input
+              type="number"
+              className="recarga-input"
+              placeholder="Ej: 5000"
+              value={montoRecarga}
+              onChange={(e) => setMontoRecarga(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="montos-rapidos">
+            <span className="montos-label">Montos sugeridos:</span>
+            <div className="montos-chips">
+              {[1000, 5000, 10000, 20000].map((monto) => (
+                <button
+                  key={monto}
+                  type="button"
+                  className="chip-btn"
+                  onClick={() => setMontoRecarga(monto)}
+                >
+                  +${monto.toLocaleString("es-AR")}
+                </button>
+              ))}
             </div>
-            <button
-              type="submit"
-              className="btn btn-primary w-100 py-2 fw-semibold"
-              disabled={submitting}
-            >
-              {submitting ? "Acreditando..." : "Confirmar Recarga"}
-            </button>
-          </form>
-        </div>
+          </div>
+
+          <div className="form-group-wallet">
+            <label className="form-label-wallet">Medio de pago</label>
+            <select className="recarga-input select-wallet" defaultValue="tarjeta">
+              <option value="tarjeta">💳 Tarjeta de Débito / Crédito</option>
+              <option value="mercadopago">🟦 Mercado Pago</option>
+              <option value="transferencia">🏦 Transferencia Bancaria</option>
+            </select>
+          </div>
+
+          <button type="submit" className="recarga-btn" disabled={submitting}>
+            {submitting ? "Acreditando..." : "Confirmar Recarga"}
+          </button>
+        </form>
+
+        <p className="recarga-info">
+          🔒 Acreditación inmediata para participar en subastas activas.
+        </p>
       </div>
+
+      {/* Modal centralizada */}
+      {showModal && (
+        <ConfirmModal
+          title={modalErrorMsg ? "Error en la Recarga" : modalSuccessMsg ? "Recarga Exitosa" : "Confirmar Recarga"}
+          prompt={`¿Estás seguro de cargar $${Number(montoRecarga || 0).toLocaleString("es-AR")} en tu Billetera Virtual?`}
+          warningText="El saldo estará disponible de forma inmediata en tu cuenta."
+          confirmText="Confirmar Recarga"
+          message={modalSuccessMsg}
+          errorMessage={modalErrorMsg}
+          onConfirm={handleConfirmarRecarga}
+          onCancel={() => setShowModal(false)}
+          isSubmitting={submitting}
+        />
+      )}
     </div>
   );
 };
