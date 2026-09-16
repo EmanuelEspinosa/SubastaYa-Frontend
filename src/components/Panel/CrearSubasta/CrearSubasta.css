@@ -1,0 +1,42 @@
+.crear-subasta-card {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0.5rem 0;
+}
+
+.crear-subasta-title {
+  color: #141436;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+}
+
+.crear-subasta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.textarea-subasta {
+  resize: vertical;
+  min-height: 90px;
+  font-family: inherit;
+}
+
+.mt-3 {
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
