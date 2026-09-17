@@ -27,9 +27,8 @@ export const Footer = () => {
                         <ul>
                             <li><Link className="item-section2" to={"/"} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Home</Link></li>
                             <li><Link className="item-section2" to={"/aboutUs"} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Sobre Nosotros</Link></li>
-                            <li><Link className='item-section2' to={"/products"} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} >Subastas</Link></li>
                             <li><Link className="item-section2" to={"/contact"} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Contacto</Link></li>
-                            <li><Link className="item-section2" to={"/cart"} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Mi historial</Link></li>
+                            <li><Link className="item-section2" to={"/login"} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Iniciar Sesión</Link></li>
                         </ul>
                     </div>
                 </div>

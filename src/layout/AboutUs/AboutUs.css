@@ -1,0 +1,264 @@
+/* ==========================================================================
+   ESTILOS INSTITUCIONALES (SUBASTAYA THEME)
+   ========================================================================== */
+
+.aboutUs-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    color: #333333;
+}
+
+/* HEADER BANNER */
+.aboutUs-header-banner {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.aboutUs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(0, 191, 255, 0.12);
+    color: #0077a3;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    margin-bottom: 0.8rem;
+    border: 1px solid rgba(0, 191, 255, 0.3);
+}
+
+.title-aboutUs {
+    font-size: 2.3rem;
+    font-weight: 800;
+    color: #141436;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle-aboutUs {
+    color: #666666;
+    font-size: 1.05rem;
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.5;
+}
+
+/* TARJETAS INTERCALADAS */
+.aboutUs-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.aboutUs-card {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 2rem;
+    background-color: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+    align-items: center;
+}
+
+.aboutUs-card.reverse {
+    grid-template-columns: 0.7fr 1.3fr;
+}
+
+.aboutUs-card .texto {
+    text-align: left;
+}
+
+.aboutUs-card h2 {
+    color: #141436;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.aboutUs-card p {
+    color: #555555;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.aboutUs-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* CAJAS DESTACADAS CON ÍCONOS */
+.visual-box {
+    background: radial-gradient(circle at top left, #1e1e2f, #12121a);
+    border-radius: 14px;
+    padding: 2.5rem 1.5rem;
+    color: #ffffff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.visual-box.highlight {
+    background: radial-gradient(circle at top left, #2a2a44, #141436);
+    border: 1px solid rgba(0, 191, 255, 0.3);
+}
+
+.big-icon {
+    font-size: 3rem;
+    color: #00bfff;
+    margin-bottom: 1rem;
+}
+
+.visual-box h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: #ffffff;
+}
+
+.visual-box p {
+    font-size: 0.85rem;
+    color: #aaaaaa;
+    margin-bottom: 0;
+}
+
+/* SECCIÓN INFERIOR DE SERVICIOS */
+.aboutUs-Servis {
+    background-color: #ffffff;
+    border: 1px solid #e0e6ed;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.04);
+}
+
+.aboutUs-Servis h2 {
+    color: #141436;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin-bottom: 2.5rem;
+}
+
+.aboutUs-Servis-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.aboutUs-servis-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.icon-servis-wrapper {
+    width: 65px;
+    height: 65px;
+    background-color: rgba(209, 57, 2, 0.08);
+    color: #d13902;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+
+.aboutUs-servis-section h4 {
+    color: #141436;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.aboutUs-servis-section p {
+    color: #666666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+    .aboutUs-card,
+    .aboutUs-card.reverse {
+        grid-template-columns: 1fr;
+    }
+
+    .aboutUs-Servis-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+
+.aboutUs-hero {
+    position: relative;
+    background: linear-gradient(135deg, #141436 0%, #1e1e42 100%);
+    border-radius: 20px;
+    padding: 3.2rem 2rem;
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 3rem;
+    box-shadow: 0 12px 30px rgba(20, 20, 54, 0.2);
+    border: 1px solid #2e2e54;
+}
+
+.aboutUs-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: rgba(0, 191, 255, 0.15);
+    color: #00bfff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    margin-bottom: 1.2rem;
+    border: 1px solid rgba(0, 191, 255, 0.35);
+    letter-spacing: 0.5px;
+}
+
+.title-aboutUs {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.5px;
+}
+
+.subtitle-aboutUs {
+    color: #b0b5c0;
+    font-size: 1.1rem;
+    max-width: 680px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ADAPTACIÓN PARA CELULARES Y TABLETS */
+@media (max-width: 768px) {
+    .aboutUs-hero {
+        padding: 2rem 1.2rem;
+        margin-bottom: 2rem;
+        border-radius: 14px;
+    }
+
+    .aboutUs-badge {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.9rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .title-aboutUs {
+        font-size: 1.8rem;
+    }
+
+    .subtitle-aboutUs {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+}
