@@ -1,0 +1,201 @@
+.loading_wallet{
+  height: 35vh;
+  font-weight: 700;
+}
+
+
+.billetera-module {
+  margin: 0 auto;
+  padding: 0.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.saldos-wallet{
+  flex: 1;
+}
+
+/* Tarjetas de Saldo */
+.saldo-card {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.saldo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+}
+
+.saldo-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.saldo-monto {
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-top: 0.4rem;
+}
+
+.saldo-monto.disponible {
+  color: #2e7d32;
+}
+
+.saldo-monto.retenido {
+  color: #e65100;
+}
+
+.saldo-monto.total {
+  color: #141436;
+}
+
+/* Tarjeta de Recarga */
+.recarga-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.75rem;
+  flex: 1;
+}
+
+.recarga-title {
+  color: #141436;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid #141436;
+}
+
+.form_recarga{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.form_recarga > label{
+  font-weight: 700;
+}
+
+.recarga-input {
+  border: 1.5px solid #ced4da;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recarga-input:focus {
+  border-color: #d13902;
+  box-shadow: 0 0 0 3px rgba(209, 57, 2, 0.15);
+  outline: none;
+}
+
+.recarga-btn {
+  background-color: #d13902;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem;
+  font-weight: 600;
+  font-size: 1rem;
+  width: 90%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.recarga-btn:hover:not(:disabled) {
+  background-color: #b02e00;
+}
+
+.recarga-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.recarga-title {
+  color: #141436;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid #141436;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-group-wallet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.form-label-wallet {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #141436;
+}
+
+/* Chips de Montos Rápidos */
+.montos-rapidos {
+  margin-bottom: 1.25rem;
+  text-align: left;
+}
+
+.montos-label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.montos-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip-btn {
+  background-color: #f1f3f5;
+  border: 1px solid #ced4da;
+  border-radius: 20px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #141436;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chip-btn:hover {
+  background-color: #141436;
+  color: #ffffff;
+  border-color: #141436;
+}
+
+.select-wallet {
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+.recarga-info {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
+  text-align: center;
+}
+
+@media (max-width: 768px){
+  .billetera-module{
+    flex-direction: column;
+  }
+}

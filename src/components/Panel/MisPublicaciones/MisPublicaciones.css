@@ -1,0 +1,235 @@
+.publicaciones-module {
+  padding: 0.5rem 0;
+}
+
+.publicaciones-loading {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.publicaciones-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.publicaciones-empty-text {
+  color: #6c757d;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* Tabla personalizada */
+.custom-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+
+.custom-table th {
+  background-color: #dadde0;
+  color: #141436;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+#th_primero{
+    border-radius: 12px 0 0 0;
+}
+
+#th_ultimo{
+    border-radius: 0 12px 0 0;
+}
+
+.custom-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.custom-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #fdfdfd;
+}
+
+/* Miniatura del Producto */
+.subasta-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+}
+
+.subasta-thumb-placeholder {
+  width: 50px;
+  height: 50px;
+  background-color: #e9ecef;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: #6c757d;
+  text-align: center;
+}
+
+.subasta-titulo {
+  font-weight: 600;
+  color: #141436;
+  font-size: 0.95rem;
+}
+
+.precio_base, .oferta_actual{
+    font-weight: 700;
+}
+
+
+/* Badges de Estado */
+.badge-estado {
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  border: 1px solid #ffeeba;
+}
+
+.badge-estado.activa {
+  background-color: #047000;
+  color: #FFF;
+}
+
+.badge-estado.finalizada {
+  background-color: #e41b00;
+  color: #f3f5f7;
+}
+
+.badge-estado.programada {
+  background-color: #ebc802;
+  color: #050607;
+}
+
+.badge-estado.desierta {
+  background-color: #5c5c5a;
+  color: #fff;
+}
+
+/* Botones de acción */
+.btn-ver-subasta {
+  color: #141436;
+  border: 1.5px solid #141436;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+
+.btn-ver-subasta:hover {
+  background-color: #141436;
+  color: #ffffff;
+}
+
+/* --- Adaptabilidad Responsive (Mobile Cards) --- */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: visible;
+  }
+
+  /* Desestructuramos la tabla tradicional */
+  .custom-table,
+  .custom-table thead,
+  .custom-table tbody,
+  .custom-table th,
+  .custom-table td,
+  .custom-table tr {
+    display: block;
+  }
+
+  /* Ocultamos el encabezado horizontal */
+  .custom-table thead {
+    display: none;
+  }
+
+  /* Transformamos cada fila en una tarjeta */
+  .custom-table tbody tr {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .custom-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  /* Cabecera de la tarjeta: Imagen + Título */
+  .custom-table td:first-child {
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 0.8rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .img_title {
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .subasta-titulo {
+    font-size: 1rem;
+  }
+
+  /* Insertamos las etiquetas de cada columna mediante CSS */
+  .custom-table td:nth-child(2)::before {
+    content: "Precio Base:";
+    font-weight: 600;
+    color: #4f565c;
+    font-size: 0.85rem;
+  }
+
+  .custom-table td:nth-child(3)::before {
+    content: "Oferta Actual:";
+    font-weight: 600;
+    color: #4f565c;
+    font-size: 0.85rem;
+  }
+
+  .custom-table td:nth-child(4)::before {
+    content: "Estado:";
+    font-weight: 600;
+    color: #4f565c;
+    font-size: 0.85rem;
+  }
+
+  /* Botón de acción ocupando todo el ancho inferior */
+  .custom-table td:last-child {
+    border-bottom: none;
+    padding-top: 0.8rem;
+  }
+
+  .btn-ver-subasta {
+    width: 100%;
+    text-align: center;
+    padding: 0.6rem 0;
+  }
+}
