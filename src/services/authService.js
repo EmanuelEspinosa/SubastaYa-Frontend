@@ -1,5 +1,6 @@
-const API_URL = "https://localhost:7000/api/auth";
+import { API_BASE_URL } from "./apiConfig";
 
+const API_URL = `${API_BASE_URL}/auth`;
 /**
  * Inicia sesión de un usuario registrado.
  * @param {Object} credentials - { email, password }

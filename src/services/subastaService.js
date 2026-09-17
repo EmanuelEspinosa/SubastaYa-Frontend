@@ -1,4 +1,6 @@
-const BASE_URL = "https://localhost:7000/api/auctions";
+import { API_BASE_URL } from "./apiConfig";
+
+const BASE_URL = `${API_BASE_URL}/auctions`;
 
 // Obtener catálogo con filtros opcionales (Categoría, Vendedor, Comprador, estado)
 export const getSubastas = async (categoriaId = null, vendedorId = null, compradorId = null, estado = null) => {

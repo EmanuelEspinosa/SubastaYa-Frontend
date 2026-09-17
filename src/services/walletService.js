@@ -1,5 +1,6 @@
-const API_URL = "https://localhost:7000/api/wallet";
+import { API_BASE_URL } from "./apiConfig";
 
+const API_URL = `${API_BASE_URL}/wallet`;
 /**
  * Obtiene la billetera completa del usuario (BilleteraDto).
  * @param {number} usuarioId
