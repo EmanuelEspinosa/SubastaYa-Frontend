@@ -1,6 +1,8 @@
+// src/services/walletService.js
 import { API_BASE_URL } from "./apiConfig";
 
 const API_URL = `${API_BASE_URL}/wallet`;
+
 /**
  * Obtiene la billetera completa del usuario (BilleteraDto).
  * @param {number} usuarioId
@@ -14,11 +16,14 @@ export const getSaldo = async (usuarioId) => {
     },
   });
 
+  // CORREGIDO: Primero parseamos la respuesta a JSON
+  const data = await response.json().catch(() => ({}));
+
   if (!response.ok) {
-    throw new Error(data.message || data.mensaje || "Error al realizar la recarga.");
+    throw new Error(data.message || data.mensaje || "Error al obtener el saldo.");
   }
 
-  return await response.json(); // Retorna { id, usuarioId, saldoTotal, saldoRetenido, saldoDisponible }
+  return data; // Retorna { id, usuarioId, saldoTotal, saldoRetenido, saldoDisponible }
 };
 
 /**
@@ -48,4 +53,27 @@ export const cargarSaldo = async (usuarioId, monto) => {
   }
 
   return data;
+};
+
+/**
+ * NUEVA FUNCIÓN: Obtiene el historial de movimientos de la billetera (TransaccionLedgerDto).
+ * @param {number} usuarioId
+ */
+export const getHistorialTransacciones = async (usuarioId) => {
+  const token = localStorage.getItem("subastaYa_token");
+
+  // Hacemos la petición al endpoint que creaste en C#
+  const response = await fetch(`${API_URL}/transactions?usuarioId=${usuarioId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.message || data.mensaje || "Error al obtener el historial.");
+  }
+
+  return data; // Retorna un array de TransaccionLedgerDto
 };

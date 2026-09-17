@@ -199,3 +199,181 @@
     flex-direction: column;
   }
 }
+
+/* ========================================================
+   NUEVO: Layout de dos columnas para Billetera + Historial
+   ======================================================== */
+
+/* Convertimos el módulo en un contenedor Flex de dos columnas */
+.billetera-module {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 0.5rem;
+}
+
+/* Columna izquierda: Saldos + Formulario de Recarga */
+.billetera-left-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 300px;
+}
+
+/* Columna derecha: Tarjeta del Historial */
+.historial-card {
+  flex: 1.5; /* Ocupa un poco más de espacio que la izquierda */
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.75rem;
+}
+
+/* Mensajes de estado del historial */
+.loading-historial,
+.empty-historial {
+  text-align: center;
+  color: #6c757d;
+  padding: 2.5rem 0;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ========================================================
+   TABLA DE HISTORIAL
+   ======================================================== */
+.historial-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.historial-table th {
+  background-color: #f8f9fa;
+  color: #141436;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 0.8rem 0.6rem;
+  border-bottom: 2px solid #e0e0e0;
+  text-align: left;
+}
+
+.historial-table td {
+  padding: 0.8rem 0.6rem;
+  font-size: 0.9rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: left;
+}
+
+.historial-table tbody tr:hover {
+  background-color: #fdfdfd;
+}
+
+/* Columna de fecha */
+.fecha-td {
+  color: #555;
+  font-size: 0.85rem !important;
+  white-space: nowrap;
+}
+
+/* Columna de subasta */
+.subasta-td {
+  font-weight: 700;
+  color: #141436;
+  text-align: center;
+}
+
+/* ========================================================
+   BADGES DE TIPO DE TRANSACCIÓN
+   ======================================================== */
+.badge-tipo {
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-block;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+/* Colores según el tipo de movimiento */
+.tipo-deposito {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #90caf9;
+}
+
+.tipo-retencion {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffb74d;
+}
+
+.tipo-liberacion {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+}
+
+.tipo-pago {
+  background-color: #fce4ec;
+  color: #880e4f;
+  border: 1px solid #f48fb1;
+}
+
+.tipo-cobro {
+  background-color: #e0f7fa;
+  color: #006064;
+  border: 1px solid #80deea;
+}
+
+/* ========================================================
+   MONTOS POSITIVOS Y NEGATIVOS
+   ======================================================== */
+.monto-td {
+  font-weight: 700;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.monto-positivo {
+  color: #2e7d32 !important; /* Verde para depósitos, liberaciones y cobros */
+}
+
+.monto-negativo {
+  color: #c62828 !important; /* Rojo para retenciones y pagos */
+}
+
+/* ========================================================
+   RESPONSIVE: Apilamos las columnas en pantallas chicas
+   ======================================================== */
+@media (max-width: 900px) {
+  .billetera-module {
+    flex-direction: column;
+  }
+
+  .billetera-left-col,
+  .historial-card {
+    width: 100%;
+  }
+
+  .historial-table {
+    font-size: 0.8rem;
+  }
+
+  .historial-table th,
+  .historial-table td {
+    padding: 0.6rem 0.4rem;
+  }
+
+  .badge-tipo {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
