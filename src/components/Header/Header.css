@@ -1,4 +1,4 @@
-*{
+* {
     box-sizing: border-box;
 }
 
@@ -21,7 +21,7 @@ header .logo_header {
     gap: 2vw;
     font-size: 25px;
     color: #fff;
-    
+
 }
 
 header .logo_header img {
@@ -31,17 +31,31 @@ header .logo_header img {
     border: 2px solid #ddd;
 }
 
+.logo_header>div {
+    font-weight: 700;
+    font-size: 2rem;
+}
 
-header .header-navbar, header .header-navar, .navegation-header, .navbar .nav-ul{
+.logo_header span {
+    font-style: italic;
+    color: rgb(209, 57, 2);
+}
+
+
+header .header-navbar,
+header .header-navar,
+.navegation-header,
+.navbar .nav-ul {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-header .header-navar{
+header .header-navar {
     gap: 1rem;
 }
-.navbar .nav-ul{
+
+.navbar .nav-ul {
     gap: .7rem
 }
 
@@ -57,22 +71,85 @@ header .navbar .nav-ul li a {
 }
 
 .navbar .nav-ul li a:hover {
-    transition: .3s; 
+    transition: .3s;
     box-shadow: inset 0 -5px 0 #00bfff;
-    color: #00bfff; 
+    color: #00bfff;
 }
 
 
-header .iconMenuMovil{
+header .iconMenuMovil {
     display: none;
     color: #FFF;
 }
 
+/* Estilos de Autenticación en Navbar */
+.user-info {
+    display: flex;
+    align-items: center;
+    color: #00bfff;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+}
+
+.user-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-logout {
+    background-color: transparent;
+    border: 1px solid #d13902;
+    color: #fff;
+    padding: 0.4rem 0.9rem;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #d13902;
+    color: #fff;
+}
+
+.nav-login {
+    background-color: #028ab8;
+    border-radius: 5px;
+    padding: 0.4rem 0.8rem !important;
+}
+
+.nav-login:hover{
+    background-color: #036796;
+}
+
+.navbar .nav-ul .li-login a:hover{
+    border: none;
+    color: #FFF;
+    box-shadow: none;
+
+}
+
+.nav-register {
+    background-color: #d13902;
+    border-radius: 5px;
+    padding: 0.4rem 0.8rem !important;
+}
+
+.nav-register:hover {
+    background-color: #b02e00;
+    box-shadow: none !important;
+    color: #fff !important;
+}
 
 
-@media (max-width: 768px){
 
-    header .iconMenuMovil{
+@media (max-width: 768px) {
+
+    header .iconMenuMovil {
         display: flex;
 
     }
@@ -80,7 +157,8 @@ header .iconMenuMovil{
     .navbar {
         position: absolute;
         top: 100%;
-        left: -100%; /* oculto por defecto */
+        left: -100%;
+        /* oculto por defecto */
         width: 100%;
         background-color: #940731;
         flex-direction: column;
@@ -90,7 +168,8 @@ header .iconMenuMovil{
     }
 
     .navbar.active {
-        left: 0; /* cuando está activo */
+        left: 0;
+        /* cuando está activo */
     }
 
     .nav-ul {
@@ -105,14 +184,23 @@ header .iconMenuMovil{
         margin: 10px 0;
     }
 
-    header .navbar .nav-ul li a{
+    header .navbar .nav-ul li a {
         justify-content: center;
         padding: .7rem;
 
     }
 
-    header .navbar .nav-ul li a:hover{
-        box-shadow: inset 0 -3px 0 #fffdfd; 
+    header .navbar .nav-ul li a:hover {
+        box-shadow: inset 0 -3px 0 #fffdfd;
 
     }
+
+    .user-info {
+        justify-content: center;
+    }
+
+    .btn-logout {
+        margin: 10px auto;
+    }
+    
 }

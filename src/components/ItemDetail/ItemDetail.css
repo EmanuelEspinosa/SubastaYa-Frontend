@@ -426,8 +426,10 @@
 }
 
 .share-product-imgRedes img {
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
+    border: 2px solid #FFF;
+    border-radius: 50%;
 }
 
 @media (max-width: 1024px) {

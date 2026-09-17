@@ -6,6 +6,8 @@ import './App.css'
 import { MainLayout } from './layout/MainLayout/MainLayout'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { Home } from './components/Home/Home'
+import { Login } from "./components/Auth/Login/Login";
+import { Registro } from "./components/Auth/Registro/Registro";
 import { ItemDetailContainer } from './components/ItemDetailContainer/ItemDetailContainer'
 
 function App() {
@@ -16,9 +18,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<MainLayout />}>
-            <Route path='/' element={<Home />}/>
+            <Route path='/' element={<Home />} />
             <Route path="categoria/:categoriaId" element={<Home />} />
             <Route path="/subasta/:id" element={<ItemDetailContainer />} />
+
+            {/* Rutas de Autenticación */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
           </Route>
         </Routes>
       </BrowserRouter>
