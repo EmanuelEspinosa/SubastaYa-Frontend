@@ -21,6 +21,7 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path='/' element={<Home />} />
             <Route path="categoria/:categoriaId" element={<Home />} />
+            <Route path="estado/:estId" element={<Home />} />
             <Route path="/subasta/:id" element={<ItemDetailContainer />} />
             <Route path="/mi-panel" element={<MiPanel />} />
             {/* Rutas de Autenticación */}

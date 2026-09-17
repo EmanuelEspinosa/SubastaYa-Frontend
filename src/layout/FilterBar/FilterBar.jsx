@@ -1,29 +1,59 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import "./FilterBar.css";
-import { useState } from "react";
 
-export const FilterBar = ({ categorias, setPageActual, search, setSearch, setSortOrder, sortOrder, products }) => {
-
+export const FilterBar = ({
+    categorias,
+    setPageActual,
+    search,
+    setSearch,
+    setSortOrder,
+    sortOrder,
+    products,
+    estados
+}) => {
     const [showFilters, setShowFilters] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
     const [showPrice, setShowPrices] = useState(false);
+    const [showEstado, setShowEstado] = useState(false);
 
-    const navigate = useNavigate();
-    const { categoriaId } = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Obtenemos los valores activos directamente de la Query String
+    const categoriaId = searchParams.get("categoriaId");
+    const estId = searchParams.get("estado");
 
     const toggleFilters = () => setShowFilters(!showFilters);
     const toggleCategories = () => setShowCategories(!showCategories);
     const togglePrice = () => setShowPrices(!showPrice);
+    const toggleEstado = () => setShowEstado(!showEstado);
 
     const handleClick = (catId) => {
+        const nuevosParams = new URLSearchParams(searchParams);
+        
         if (!catId || catId === "Todas") {
-            navigate("/");
+            nuevosParams.delete("categoriaId");
         } else {
-            navigate(`/categoria/${catId}`);
+            nuevosParams.set("categoriaId", catId);
         }
+
+        setSearchParams(nuevosParams);
+        setPageActual(1);
+    };
+
+    const estadoHadleClick = (estadoId) => {
+        const nuevosParams = new URLSearchParams(searchParams);
+        
+        if (!estadoId || estadoId === "Todos") {
+            nuevosParams.delete("estado");
+        } else {
+            nuevosParams.set("estado", estadoId);
+        }
+
+        setSearchParams(nuevosParams);
         setPageActual(1);
     };
 
@@ -99,7 +129,39 @@ export const FilterBar = ({ categorias, setPageActual, search, setSearch, setSor
                         )}
                     </div>
 
-                    {/* Sección Por Oferta */}
+                    {/* Sección Estado */}
+                    <div className="filter-section section-category">
+                        <button className="toggle-btnCateg" onClick={toggleEstado}>
+                            Estado {showEstado ? <FaChevronUp /> : <FaChevronDown />}
+                        </button>
+                        {showEstado && (
+                            <div className="filter-tags">
+                                <button
+                                    className={!estId ? "active" : ""}
+                                    onClick={() => {
+                                        estadoHadleClick("Todos");
+                                        setShowFilters(false);
+                                    }}
+                                >
+                                    Todos
+                                </button>
+                                {estados.map((item) => (
+                                    <button
+                                        key={item.id}
+                                        className={Number(estId) === item.id ? "active" : ""}
+                                        onClick={() => {
+                                            estadoHadleClick(item.id);
+                                            setShowFilters(false);
+                                        }}
+                                    >
+                                        {item.nombre}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Sección Ordenamiento por Precio */}
                     <div className="filter-section">
                         <button className="toggle-btnPrice" onClick={togglePrice}>
                             Ordenar por {showPrice ? <FaChevronUp /> : <FaChevronDown />}

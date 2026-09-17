@@ -16,7 +16,7 @@ export const MisPujas = () => {
       try {
         setLoading(true);
         // getSubastas(categoriaId, vendedorId, compradorId)
-        const data = await getSubastas(null, null, user.usuarioId);
+        const data = await getSubastas(null, null, user.usuarioId, null);
         setCompras(data);
       } catch (err) {
         setError(err.message || "Error al obtener las pujas.");

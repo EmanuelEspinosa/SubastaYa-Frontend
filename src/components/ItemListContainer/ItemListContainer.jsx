@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { ItemList } from "../ItemList/ItemList";
-import "./ItemListContainer.css";
 import { Pagination } from "../../layout/Pagination/Pagination";
 import { FilterBar } from "../../layout/FilterBar/FilterBar";
-import { Link, useParams } from "react-router-dom";
 import { getSubastas } from "../../services/subastaService"; 
+import "./ItemListContainer.css";
 
 export const ItemListContainer = () => {
     const [subastas, setSubastas] = useState([]);
     const [paginaActual, setPaginaActual] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortOrder, setSortOrder] = useState("sin_filtrar"); // "sin_filtrar" | "asc" | "desc"
-    const { categoriaId } = useParams();
+    const [sortOrder, setSortOrder] = useState("sin_filtrar");
 
-    // Categorías registradas en la API para el filtro
+    // Leemos los filtros activos desde la Query String de la URL
+    const [searchParams] = useSearchParams();
+    const categoriaId = searchParams.get("categoriaId");
+    const estId = searchParams.get("estado");
+
     const categoriasDisponibles = [
         { id: 1, nombre: "Tecnología" },
         { id: 2, nombre: "Coleccionables" },
@@ -21,7 +24,13 @@ export const ItemListContainer = () => {
         { id: 4, nombre: "Vehículos" }
     ];
 
-    // Obtener el nombre de la categoría seleccionada para el Breadcrumb
+    const estados = [
+        { id: 1, nombre: "Programada" },
+        { id: 2, nombre: "Activa" },
+        { id: 3, nombre: "Finalizada" },
+        { id: 4, nombre: "Desierta" }
+    ];
+
     const categoriaNombreActual = categoriasDisponibles.find(
         (c) => c.id === Number(categoriaId)
     )?.nombre;
@@ -29,7 +38,13 @@ export const ItemListContainer = () => {
     useEffect(() => {
         setPaginaActual(1);
         
-        getSubastas(categoriaId ? Number(categoriaId) : null)
+        // Enviamos tanto la categoría como el estado simultáneamente a la API
+        getSubastas(
+            categoriaId ? Number(categoriaId) : null,
+            null,
+            null,
+            estId ? Number(estId) : null
+        )
             .then((data) => {
                 if (data && data.length > 0) {
                     setSubastas(data);
@@ -41,9 +56,9 @@ export const ItemListContainer = () => {
                 console.error("Error al obtener subastas de la API:", err);
                 setSubastas([]);
             });
-    }, [categoriaId]);
+    }, [categoriaId, estId]);
 
-    // Filtrado local por título, descripción o nombre de categoría
+    // Filtrado local por buscador de texto
     let filteredAuctions = searchTerm === "" 
         ? subastas 
         : subastas.filter((s) =>
@@ -52,7 +67,7 @@ export const ItemListContainer = () => {
             (s.categoriaNombre && s.categoriaNombre.toLowerCase().includes(searchTerm.toLowerCase()))
         );
 
-    // Ordenamiento por oferta más alta actual
+    // Ordenamiento local por monto
     if (sortOrder === "asc") {
         filteredAuctions = [...filteredAuctions].sort((a, b) => a.ofertaMasAltaActual - b.ofertaMasAltaActual);
     } else if (sortOrder === "desc") {
@@ -89,6 +104,7 @@ export const ItemListContainer = () => {
                     sortOrder={sortOrder}
                     setSortOrder={setSortOrder}
                     products={filteredAuctions}
+                    estados={estados}
                 />
 
                 <div className="products-container">

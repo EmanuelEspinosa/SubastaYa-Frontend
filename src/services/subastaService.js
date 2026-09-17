@@ -1,12 +1,13 @@
 const BASE_URL = "https://localhost:7000/api/auctions";
 
-// Obtener catálogo con filtros opcionales (Categoría, Vendedor, Comprador)
-export const getSubastas = async (categoriaId = null, vendedorId = null, compradorId = null) => {
+// Obtener catálogo con filtros opcionales (Categoría, Vendedor, Comprador, estado)
+export const getSubastas = async (categoriaId = null, vendedorId = null, compradorId = null, estado = null) => {
   const params = new URLSearchParams();
 
   if (categoriaId) params.append("categoriaId", categoriaId);
   if (vendedorId) params.append("vendedorId", vendedorId);
   if (compradorId) params.append("compradorId", compradorId);
+  if(estado) params.append("estado", estado);
 
   const url = params.toString() ? `${BASE_URL}?${params.toString()}` : BASE_URL;
 

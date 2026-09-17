@@ -16,7 +16,7 @@ export const MisPublicaciones = () => {
       try {
         setLoading(true);
         // getSubastas(categoriaId, vendedorId, compradorId)
-        const data = await getSubastas(null, user.usuarioId, null);
+        const data = await getSubastas(null, user.usuarioId, null, null);
         setPublicaciones(data);
       } catch (err) {
         setError(err.message || "Error al obtener tus publicaciones.");
