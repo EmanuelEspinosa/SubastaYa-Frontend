@@ -1,12 +1,15 @@
+// src/components/Panel/Billetera/Billetera.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext";
-import { getSaldo, cargarSaldo } from "../../../services/walletService";
+// 1. IMPORTANTE: Agregamos getHistorialTransacciones a la importación
+import { getSaldo, cargarSaldo, getHistorialTransacciones } from "../../../services/walletService";
 import { ConfirmModal } from "../../../layout/ConfirmModal/ConfirmModal";
 import "./Billetera.css";
 
 export const Billetera = () => {
   const { user } = useAuth();
 
+  // ===== ESTADOS EXISTENTES =====
   const [billetera, setBilletera] = useState({
     saldoTotal: 0,
     saldoRetenido: 0,
@@ -15,12 +18,15 @@ export const Billetera = () => {
   const [montoRecarga, setMontoRecarga] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-
-  // Estados para la Modal y Feedback
   const [showModal, setShowModal] = useState(false);
   const [modalSuccessMsg, setModalSuccessMsg] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState(null);
 
+  // ===== 2. NUEVOS ESTADOS (para el historial) =====
+  const [transacciones, setTransacciones] = useState([]); // Guarda la lista de movimientos
+  const [loadingHistorial, setLoadingHistorial] = useState(true); // Controla el spinner de la tabla
+
+  // ===== FUNCIÓN: Cargar saldos =====
   const cargarDatos = async () => {
     if (!user?.usuarioId) return;
     try {
@@ -33,8 +39,24 @@ export const Billetera = () => {
     }
   };
 
+  // ===== 3. FUNCIÓN NUEVA: Cargar historial =====
+  const cargarHistorial = async () => {
+    if (!user?.usuarioId) return;
+    try {
+      setLoadingHistorial(true);
+      const data = await getHistorialTransacciones(user.usuarioId);
+      setTransacciones(data); // Guardamos la lista que vino del backend
+    } catch (err) {
+      console.error("Error al cargar historial:", err.message);
+    } finally {
+      setLoadingHistorial(false);
+    }
+  };
+
+  // ===== 4. useEffect: Cuando entra a la pantalla, pedimos saldos E historial =====
   useEffect(() => {
     cargarDatos();
+    cargarHistorial(); // <-- Nueva llamada al entrar
   }, [user]);
 
   const handleOpenModal = (e) => {
@@ -55,19 +77,18 @@ export const Billetera = () => {
       const msgExito = `¡Transacción realizada con éxito! Se acreditaron $${Number(montoRecarga).toLocaleString("es-AR")}.`;
       setModalSuccessMsg(msgExito);
       setMontoRecarga("");
+      
+      // ===== 5. CLAVE: Refrescamos saldos Y el historial =====
       await cargarDatos();
+      await cargarHistorial(); // <-- Aparece el nuevo movimiento automáticamente
 
-      // Cierra la modal tras 2.5 segundos
       setTimeout(() => {
         setShowModal(false);
         setModalSuccessMsg(null);
       }, 2500);
 
     } catch (err) {
-      // Muestra la excepción de .NET dentro de la misma modal
       setModalErrorMsg(err.message);
-
-      // Cierra la modal tras 2.5 segundos
       setTimeout(() => {
         setShowModal(false);
         setModalErrorMsg(null);
@@ -77,92 +98,155 @@ export const Billetera = () => {
     }
   };
 
+  // ===== Helper para formatear moneda =====
+  const formatCurrency = (val) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0
+    }).format(val || 0);
+  };
+
   if (loading) {
     return <div className="loading_wallet">Cargando estado de cuenta...</div>;
   }
 
   return (
     <div className="billetera-module">
-      {/* Desglose de saldos */}
-      <div className="saldos-wallet">
-        <div className="saldo-card">
-          <span className="saldo-label">Disponible</span>
-          <h4 className="saldo-monto disponible">
-            ${billetera.saldoDisponible.toLocaleString("es-AR")}
-          </h4>
-        </div>
-
-        <div className="saldo-card">
-          <span className="saldo-label">Retenido (Pujas)</span>
-          <h4 className="saldo-monto retenido">
-            ${billetera.saldoRetenido.toLocaleString("es-AR")}
-          </h4>
-        </div>
-
-        <div className="saldo-card">
-          <span className="saldo-label">Saldo Total</span>
-          <h4 className="saldo-monto total">
-            ${billetera.saldoTotal.toLocaleString("es-AR")}
-          </h4>
-        </div>
-      </div>
-
-      {/* Formulario de recarga */}
-      <div className="recarga-card">
-        <h4 className="recarga-title">Recargar Saldo</h4>
-
-        <form onSubmit={handleOpenModal}>
-          <div className="form-group-wallet">
-            <label className="form-label-wallet">Monto a cargar ($)</label>
-            <input
-              type="number"
-              className="recarga-input"
-              placeholder="Ej: 5000"
-              value={montoRecarga}
-              onChange={(e) => setMontoRecarga(e.target.value)}
-              required
-            />
+      
+      {/* ============ COLUMNA IZQUIERDA: Saldos y Recarga ============ */}
+      <div className="billetera-left-col">
+        <div className="saldos-wallet">
+          <div className="saldo-card">
+            <span className="saldo-label">Disponible</span>
+            <h4 className="saldo-monto disponible">
+              ${billetera.saldoDisponible.toLocaleString("es-AR")}
+            </h4>
           </div>
+          <div className="saldo-card">
+            <span className="saldo-label">Retenido (Pujas)</span>
+            <h4 className="saldo-monto retenido">
+              ${billetera.saldoRetenido.toLocaleString("es-AR")}
+            </h4>
+          </div>
+          <div className="saldo-card">
+            <span className="saldo-label">Saldo Total</span>
+            <h4 className="saldo-monto total">
+              ${billetera.saldoTotal.toLocaleString("es-AR")}
+            </h4>
+          </div>
+        </div>
 
-          <div className="montos-rapidos">
-            <span className="montos-label">Montos sugeridos:</span>
-            <div className="montos-chips">
-              {[1000, 5000, 10000, 20000].map((monto) => (
-                <button
-                  key={monto}
-                  type="button"
-                  className="chip-btn"
-                  onClick={() => setMontoRecarga(monto)}
-                >
-                  +${monto.toLocaleString("es-AR")}
-                </button>
-              ))}
+        <div className="recarga-card">
+          <h4 className="recarga-title">Recargar Saldo</h4>
+          <form onSubmit={handleOpenModal}>
+            <div className="form-group-wallet">
+              <label className="form-label-wallet">Monto a cargar ($)</label>
+              <input
+                type="number"
+                className="recarga-input"
+                placeholder="Ej: 5000"
+                value={montoRecarga}
+                onChange={(e) => setMontoRecarga(e.target.value)}
+                required
+              />
             </div>
-          </div>
 
-          <div className="form-group-wallet">
-            <label className="form-label-wallet">Medio de pago</label>
-            <select className="recarga-input select-wallet" defaultValue="tarjeta">
-              <option value="tarjeta">💳 Tarjeta de Débito / Crédito</option>
-              <option value="mercadopago">🟦 Mercado Pago</option>
-              <option value="transferencia">🏦 Transferencia Bancaria</option>
-            </select>
-          </div>
+            <div className="montos-rapidos">
+              <span className="montos-label">Montos sugeridos:</span>
+              <div className="montos-chips">
+                {[1000, 5000, 10000, 20000].map((monto) => (
+                  <button
+                    key={monto}
+                    type="button"
+                    className="chip-btn"
+                    onClick={() => setMontoRecarga(monto)}
+                  >
+                    +${monto.toLocaleString("es-AR")}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-          <button type="submit" className="recarga-btn" disabled={submitting}>
-            {submitting ? "Acreditando..." : "Confirmar Recarga"}
-          </button>
-        </form>
+            <div className="form-group-wallet">
+              <label className="form-label-wallet">Medio de pago</label>
+              <select className="recarga-input select-wallet" defaultValue="tarjeta">
+                <option value="tarjeta">💳 Tarjeta de Débito / Crédito</option>
+                <option value="mercadopago">🟦 Mercado Pago</option>
+                <option value="transferencia">🏦 Transferencia Bancaria</option>
+              </select>
+            </div>
 
-        <p className="recarga-info">
-          🔒 Acreditación inmediata para participar en subastas activas.
-        </p>
+            <button type="submit" className="recarga-btn" disabled={submitting}>
+              {submitting ? "Acreditando..." : "Confirmar Recarga"}
+            </button>
+          </form>
+
+          <p className="recarga-info">
+            🔒 Acreditación inmediata para participar en subastas activas.
+          </p>
+        </div>
       </div>
 
-      {/* Modal centralizada */}
+      {/* ============ COLUMNA DERECHA: Historial de Movimientos ============ */}
+      <div className="historial-card">
+        <h4 className="recarga-title">Historial de Movimientos</h4>
+        
+        {loadingHistorial ? (
+          <p className="loading-historial">Cargando movimientos...</p>
+        ) : transacciones.length === 0 ? (
+          <p className="empty-historial">No hay movimientos registrados aún.</p>
+        ) : (
+          <div className="table-responsive">
+            <table className="custom-table historial-table">
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Tipo</th>
+                  <th>Monto</th>
+                  <th>Subasta</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* 6. Recorremos la lista de transacciones con .map() */}
+                {transacciones.map((t) => (
+                  <tr key={t.id}>
+                    <td className="fecha-td">
+                      {new Date(t.fecha).toLocaleString("es-AR", {
+                        dateStyle: "short",
+                        timeStyle: "short"
+                      })}
+                    </td>
+                    <td>
+                      <span className={`badge-tipo tipo-${t.tipoNombre.toLowerCase()}`}>
+                        {t.tipoNombre}
+                      </span>
+                    </td>
+                    <td className={`monto-td ${t.tipo === 1 || t.tipo === 3 || t.tipo === 5 ? "monto-positivo" : "monto-negativo"}`}>
+                      {t.tipo === 1 || t.tipo === 3 || t.tipo === 5 ? "+" : "-"} 
+                      {formatCurrency(t.monto)}
+                    </td>
+                    <td className="subasta-td">
+                      {t.subastaId ? `#${t.subastaId}` : "-"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Modal de confirmación */}
       {showModal && (
         <ConfirmModal
-          title={modalErrorMsg ? "Error en la Recarga" : modalSuccessMsg ? "Recarga Exitosa" : "Confirmar Recarga"}
+          title={
+            modalErrorMsg
+              ? "Error en la Recarga"
+              : modalSuccessMsg
+              ? "Recarga Exitosa"
+              : "Confirmar Recarga"
+          }
           prompt={`¿Estás seguro de cargar $${Number(montoRecarga || 0).toLocaleString("es-AR")} en tu Billetera Virtual?`}
           warningText="El saldo estará disponible de forma inmediata en tu cuenta."
           confirmText="Confirmar Recarga"
