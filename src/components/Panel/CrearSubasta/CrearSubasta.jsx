@@ -201,7 +201,7 @@ export const CrearSubasta = ({ onSuccess }) => {
           </div>
         </div>
 
-        <button type="submit" className="recarga-btn mt-3" disabled={submitting}>
+        <button type="submit" className="recarga-btn mt-3 crear-subasta" disabled={submitting}>
           Publicar Subasta
         </button>
       </form>

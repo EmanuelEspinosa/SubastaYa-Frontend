@@ -23,13 +23,6 @@
   margin-bottom: 1.25rem;
 }
 
-/* Tabla personalizada */
-.custom-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
 .img_title{
   display: flex;
   gap: .7rem;
@@ -93,9 +86,9 @@
 
 /*RESULTADO*/
 .activa_ganando{
-  background-color: #02b352;
+  background-color: #02a2d8;
   border: 1px solid #d6d8db;
-  color: #FFF;
+  color: #141436;
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
   font-size: 0.8rem;
@@ -104,8 +97,8 @@
 }
 
 .activa_superada{
-  background-color: #7a8302;
-  border: 1px solid #131920;
+  background-color: #5e0283;
+  border: 1px solid #d6d6d6;
   color: #FFF;
   padding: 0.35rem 0.75rem;
   border-radius: 20px;
@@ -166,5 +159,15 @@
 .btn-explorar:hover {
   background-color: #b02e00;
   color: #ffffff;
+}
+
+
+@media (max-width: 768px){
+  .custom-table #td-resultado::before {
+    content: "Resultado:";
+    font-weight: 600;
+    color: #4f565c;
+    font-size: 0.85rem;
+  }
 }
 

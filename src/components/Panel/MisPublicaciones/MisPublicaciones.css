@@ -89,6 +89,7 @@
   font-weight: 600;
   color: #141436;
   font-size: 0.95rem;
+  text-align: start;
 }
 
 .precio_base, .oferta_actual{
