@@ -104,7 +104,7 @@ export const MisPujas = () => {
                       user?.usuarioId === subasta.compradorLiderId ? (
                         <span className="activa_ganando">Ganando...</span>
                       ) : (
-                        <span className="activa_superada">Perdiendo...</span>
+                        <span className="activa_superada">Superado...</span>
                       )
                     ) : estadoNombre === "Finalizada" ? (
                       user?.usuarioId === subasta.compradorLiderId ? (

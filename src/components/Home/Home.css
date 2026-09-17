@@ -1,6 +1,6 @@
 .container-page {
     background-color: #EEE;
-    padding-bottom: 4rem;
+    padding-bottom: 2.5rem;
     padding-top: 1rem;
 }
 
@@ -10,4 +10,57 @@
     object-fit: cover;
     display: block;
     border-radius: 8px;
+}
+
+.section-newsletter {
+    width: 80%;
+    margin: auto;
+    border-radius: 10px;
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background-image: url("/images/fondo-newsletter4.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    outline: 2px solid #1b1b2b;
+    margin-bottom: 1rem;
+}
+
+.section-newsletter>h2 {
+    margin-bottom: .7rem;
+}
+
+.section-newsletter>p {
+    margin-bottom: 1rem;
+    width: 65%;
+    margin: auto;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+.section-newsletter .input-newsletter {
+    width: 100%;
+    max-width: 500px;
+    background-color: #EEE;
+    margin: auto;
+    padding: .2rem;
+    border-radius: 30px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.733);
+}
+
+.section-newsletter .input-newsletter>form {
+    display: flex;
+    gap: .5rem;
+}
+
+
+@media (max-width: 900px) {
+    .input-newsletter .input-email {
+        font-size: .9rem;
+        width: 30%;
+    }
+
+    .section-newsletter>p {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
 }
