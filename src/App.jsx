@@ -10,6 +10,9 @@ import { Login } from "./components/Auth/Login/Login";
 import { Registro } from "./components/Auth/Registro/Registro";
 import { ItemDetailContainer } from './components/ItemDetailContainer/ItemDetailContainer'
 import { MiPanel } from './components/Panel/MiPanel'
+import { Contact } from './components/Contact/Contact'
+import { ScrollToTop } from './layout/ScrollToTop/ScrollToTop'
+import { AboutUs } from './layout/AboutUs/AboutUs'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +20,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
+        <ScrollToTop />
         <Routes>
           <Route element={<MainLayout />}>
             <Route path='/' element={<Home />} />
@@ -24,6 +28,8 @@ function App() {
             <Route path="estado/:estId" element={<Home />} />
             <Route path="/subasta/:id" element={<ItemDetailContainer />} />
             <Route path="/mi-panel" element={<MiPanel />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/aboutUs' element={<AboutUs />} />
             {/* Rutas de Autenticación */}
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
