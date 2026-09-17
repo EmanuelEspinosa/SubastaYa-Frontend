@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { MisPujas } from "./Pujas/MisPujas";
 import { MisPublicaciones } from "./MisPublicaciones/MisPublicaciones";
 import { Billetera } from "./Billetera/Billetera";
+import { CrearSubasta } from "./CrearSubasta/CrearSubasta";
 import "./MiPanel.css";
 
 export const MiPanel = () => {
@@ -36,6 +37,12 @@ export const MiPanel = () => {
         >
           Mi Billetera
         </button>
+        <button
+          className={`tab-btn ${tabActual === "crear" ? "active" : ""}`}
+          onClick={() => cambiarTab("crear")}
+        >
+          + Crear Subasta
+        </button>
       </div>
 
       {/* Renderizado de la pestaña seleccionada */}
@@ -43,6 +50,9 @@ export const MiPanel = () => {
         {tabActual === "compras" && <MisPujas />}
         {tabActual === "publicaciones" && <MisPublicaciones />}
         {tabActual === "billetera" && <Billetera />}
+        {tabActual === "crear" && (
+          <CrearSubasta onSuccess={() => cambiarTab("publicaciones")} />
+        )}
       </div>
     </div>
   );

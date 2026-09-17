@@ -12,7 +12,8 @@ export const getSubastas = async (categoriaId = null, vendedorId = null, comprad
 
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error("Error al obtener el catálogo de subastas");
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.mensaje || "Error al obtener el catálogo de subastas.");
   }
 
   return await res.json();
@@ -22,12 +23,13 @@ export const getSubastas = async (categoriaId = null, vendedorId = null, comprad
 export const getSubastaById = async (id) => {
   const res = await fetch(`${BASE_URL}/${id}`);
   if (!res.ok) {
-    throw new Error("Subasta no encontrada");
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.mensaje || "Subasta no encontrada.");
   }
   return await res.json();
 };
 
-// Crear nueva subasta
+// Crear nueva subasta (captura DomainException del backend)
 export const createSubasta = async (subastaData) => {
   const token = localStorage.getItem("subastaYa_token");
 
@@ -40,11 +42,14 @@ export const createSubasta = async (subastaData) => {
     body: JSON.stringify(subastaData),
   });
 
+  const data = await res.json();
+
   if (!res.ok) {
-    throw new Error("No se pudo publicar la subasta");
+    // Busca 'message' o 'mensaje' devuelto por .NET
+    throw new Error(data.message || data.mensaje || "No se pudo publicar la subasta.");
   }
 
-  return await res.json();
+  return data;
 };
 
 // Realizar puja en una subasta (POST /api/auctions/{id}/bids)
@@ -63,7 +68,7 @@ export const realizarPuja = async (subastaId, pujaData) => {
   const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(data.mensaje || "Error al realizar la puja");
+    throw new Error(data.message || data.mensaje || "Error al realizar la puja.");
   }
 
   return data;
@@ -73,7 +78,8 @@ export const realizarPuja = async (subastaId, pujaData) => {
 export const getHistorialPujas = async (id) => {
   const response = await fetch(`${BASE_URL}/${id}/bids`);
   if (!response.ok) {
-    throw new Error("Error al obtener el historial de pujas");
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || errorData.mensaje || "Error al obtener el historial de pujas.");
   }
   return await response.json();
 };

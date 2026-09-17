@@ -129,8 +129,9 @@
 .container-price {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: space-between;
     margin: 1rem 0;
+    gap: 1.3rem
 }
 
 
@@ -159,12 +160,16 @@
     background-color: rgba(0, 230, 118, 0.2);
     color: #00e676;
     border: 1px solid #00e676;
+    padding: .8rem;
+    border-radius: 10px;
 }
 
 .badge-outbid {
     background-color: rgba(255, 82, 82, 0.2);
     color: #ff5252;
     border: 1px solid #ff5252;
+    padding: .8rem;
+    border-radius: 10px;
 }
 
 /* CONSOLA DE PUJA */
@@ -264,7 +269,7 @@
 .bids-list {
     list-style: none;
     padding: 0;
-    max-height: 200px;
+    /* max-height: 200px; */
     overflow-y: auto;
 }
 
@@ -331,6 +336,23 @@
     padding: 0.6rem;
     border-radius: 8px;
     cursor: pointer;
+}
+
+.solicitud-login{
+    border: 1px dashed #00bfff !important;
+}
+
+.solicitud-login > p{
+    color: #00bfff;
+}
+
+.solicitud-login .icono-secion{
+    color: #00bfff;
+}
+
+.solicitud-login .link-secion{
+    color: #d13902;
+    border-bottom: 1px solid #d13902;
 }
 
 /* MEDIA QUERIES RESPONSIVE */
@@ -432,11 +454,6 @@
     border-radius: 50%;
 }
 
-@media (max-width: 1024px) {
-    .item-detail {
-        grid-template-columns: 1fr;
-    }
-}
 
 /* COLORES DE ESTADO FORZADOS */
 .estado-1 {
@@ -477,4 +494,79 @@
     background-color: #38252a;
     color: #ff5252;
     border-left: 4px solid #ff5252;
+}
+
+/* Tablets y laptops pequeñas */
+@media (max-width: 1024px) {
+    .item-detail {
+        grid-template-columns: 1fr;
+        padding: 2.5rem 2rem;
+        gap: 2rem;
+        width: 98%;
+        margin: 1rem auto;
+    }
+}
+
+/* Smartphones */
+@media (max-width: 600px) {
+    .item-detail {
+        padding: 3rem 1rem 1.5rem 1rem;
+        margin: 0.5rem auto;
+        border-radius: 12px;
+        width: 90%;
+    }
+
+    .icono-cierreCard {
+        top: 15px;
+        right: 15px;
+    }
+
+    .container-price {
+        /* flex-direction: column; */
+        align-items: flex-start;
+        gap: 0.8rem;
+    }
+
+    .item-detail__price {
+        font-size: 1.8rem;
+    }
+
+    /* Apilar el input y el botón de puja en pantallas muy angostas */
+    .bidding-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .currency-symbol {
+        display: none;
+    }
+
+    .bidding-input-group input {
+        width: 100%;
+        padding: 0.8rem;
+        text-align: center;
+    }
+
+    .btn-bid-submit {
+        width: 100%;
+        padding: 0.8rem;
+    }
+
+    .item-detail__image {
+        min-height: 240px;
+        padding: 1rem;
+    }
+
+    .item-detail__image img {
+        max-height: 230px;
+    }
+
+    .timer-banner {
+        font-size: 0.85rem;
+        padding: 0.7rem;
+    }
+
+    .quick-bids {
+        justify-content: center;
+    }
 }

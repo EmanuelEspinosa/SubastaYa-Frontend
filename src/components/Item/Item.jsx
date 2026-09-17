@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import "./Item.css";
 
@@ -11,7 +13,8 @@ export const Item = ({
     ofertaMasAltaActual,
     precioBase,
     cantidadOfertas,
-    estado
+    estado,
+    fechaFin
 }) => {
     const formatCurrency = (val) => {
         return new Intl.NumberFormat("es-AR", {
@@ -23,7 +26,7 @@ export const Item = ({
 
     const getEstadoInfo = (estadoNum) => {
         switch (estadoNum) {
-            case 1: 
+            case 1:
                 return { texto: "Programada", clase: "estado-programada" };
             case 2:
                 return { texto: "Activa", clase: "estado-activa" };
@@ -36,6 +39,44 @@ export const Item = ({
 
     const { texto: estadoTexto, clase: estadoClase } = getEstadoInfo(estado);
 
+    const [timeLeft, setTimeLeft] = useState({
+        hours: "00",
+        minutes: "00",
+        seconds: "00",
+        isCritical: false,
+        isEnded: false
+    });
+
+    useEffect(() => {
+        if (estado !== 2 || !fechaFin) return;
+
+        const interval = setInterval(() => {
+            const now = new Date().getTime();              // Momento actual
+            const target = new Date(fechaFin).getTime();   // Fecha fin enviada por la API
+            const difference = target - now;               // Milisegundos restantes
+
+            if (difference <= 0) {
+                clearInterval(interval);
+                setTimeLeft({ hours: "00", minutes: "00", seconds: "00", isCritical: false, isEnded: true });
+            } else {
+                const h = Math.floor((difference / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((difference / 1000 / 60) % 60);
+                const s = Math.floor((difference / 1000) % 60);
+
+                // Guarda los valores formateados en el estado
+                setTimeLeft({
+                    hours: h < 10 ? `0${h}` : `${h}`,
+                    minutes: m < 10 ? `0${m}` : `${m}`,
+                    seconds: s < 10 ? `0${s}` : `${s}`,
+                    isCritical: Math.floor(difference / 1000) <= 120, // Parpadea si quedan <= 2 min
+                    isEnded: false
+                });
+            }
+        }, 1000);
+
+        return () => clearInterval(interval); // Limpieza de memoria
+    }, [fechaFin, estado]);
+
     return (
         <article className="cardProduct">
             <div className="product-img">
@@ -43,6 +84,13 @@ export const Item = ({
                 <span className={`status-badge ${estadoClase}`}>
                     {estadoTexto}
                 </span>
+                {estado === 2 && !timeLeft.isEnded && (
+                    <div className={`timer-banner timer-banner-item ${timeLeft.isCritical ? "timer-critical" : ""}`}>
+                        <span>
+                            Tiempo Restante: {timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
+                        </span>
+                    </div>
+                )}
             </div>
 
             <div className="product-info">

@@ -13,53 +13,59 @@ import {
     faWallet,
     faBan
 } from "@fortawesome/free-solid-svg-icons";
+
+import { useAuth } from "../../context/AuthContext";
+import { realizarPuja } from "../../services/subastaService";
 import { ConfirmModal } from "../../layout/ConfirmModal/ConfirmModal";
 import "./ItemDetail.css";
 
-export const ItemDetail = ({ detail, historialPujas = [] }) => {
+export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }) => {
+    const { user } = useAuth();
+
+    // Mapeo directo del SubastaDto enviado por la API
     const {
         id,
+        vendedorNombre,
+        categoriaNombre,
         titulo,
         descripcion,
         urlImagen,
-        categoriaNombre,
-        vendedorNombre,
-        ofertaMasAltaActual,
-        precioBase,
+        precioBase = 0,
         incrementoMinimo = 1000,
+        compradorLiderId,
+        ofertaMasAltaActual,
         cantidadOfertas = 0,
-        estado, // Enum: 1=Programada, 2=Activa, 3=Finalizada, 4=Desierta
         fechaInicio,
         fechaFin,
-        esMiOfertaLaMasAlta = false
+        estado
     } = detail;
 
-    const estadoNum = Number(estado) || 1;
-
-    // Historial de ofertas
-    const ofertasList = historialPujas.length > 0
-        ? historialPujas
-        : (detail.historialOfertas || detail.ofertas || detail.pujas || detail.bids || []);
-
-    const precioActual = ofertaMasAltaActual || precioBase;
+    // const estadoNum = Number(estado) || 1;
+    const precioActual = cantidadOfertas > 0 ? ofertaMasAltaActual : precioBase;
     const pujaMinimaSugerida = precioActual + incrementoMinimo;
+
+    // Evaluación directa usando CompradorLiderId del DTO
+    const esMiOfertaLaMasAlta = user?.usuarioId && Number(compradorLiderId) === Number(user.usuarioId);
+    const haOfertadoElUsuario = historialPujas.some(bid => Number(bid.compradorId) === Number(user?.usuarioId));
 
     const [montoOferta, setMontoOferta] = useState(pujaMinimaSugerida);
     const [showModal, setShowModal] = useState(false);
-    const [confirmMessage, setConfirmMessage] = useState("");
+    const [modalSuccessMsg, setModalSuccessMsg] = useState(null);
+    const [modalErrorMsg, setModalErrorMsg] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Cuenta regresiva (solo activa si estado === 2)
+    // Actualiza el monto cuando cambia el precio actual
+    useEffect(() => {
+        setMontoOferta(pujaMinimaSugerida);
+    }, [precioActual, incrementoMinimo]);
+
+    // Temporizador
     const [timeLeft, setTimeLeft] = useState({
-        hours: "00",
-        minutes: "00",
-        seconds: "00",
-        isCritical: false,
-        isEnded: estadoNum === 3 || estadoNum === 4
+        hours: "00", minutes: "00", seconds: "00", isCritical: false, isEnded: estado === 3 || estado === 4
     });
 
     useEffect(() => {
-        if (estadoNum !== 2 || !fechaFin) return;
+        if (estado !== 2 || !fechaFin) return;
 
         const interval = setInterval(() => {
             const now = new Date().getTime();
@@ -86,7 +92,7 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [fechaFin, estadoNum]);
+    }, [fechaFin, estado]);
 
     const formatCurrency = (val) => {
         return new Intl.NumberFormat("es-AR", {
@@ -102,26 +108,54 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
-        if (Number(montoOferta) < pujaMinimaSugerida) {
-            alert(`Tu oferta debe ser de al menos ${formatCurrency(pujaMinimaSugerida)}`);
-            return;
-        }
+        setModalSuccessMsg(null);
+        setModalErrorMsg(null);
         setShowModal(true);
     };
 
-    const handleConfirmBid = () => {
+    const handleConfirmBid = async () => {
         setIsSubmitting(true);
-        setTimeout(() => {
-            setConfirmMessage(`¡Oferta realizada con éxito por ${formatCurrency(montoOferta)}!`);
-            setIsSubmitting(false);
+        setModalSuccessMsg(null);
+        setModalErrorMsg(null);
+
+        try {
+            const payload = {
+                subastaId: Number(id),
+                compradorId: Number(user?.usuarioId),
+                monto: Number(montoOferta)
+            };
+
+            const resultado = await realizarPuja(id, payload);
+
+            let msgExito = resultado.mensaje || `¡Oferta realizada con éxito por ${formatCurrency(montoOferta)}!`;
+            if (resultado.tiempoExtendido) {
+                msgExito += " ⏱️ ¡Se activó la garantía Anti-Sniping y el tiempo fue extendido!";
+            }
+
+            setModalSuccessMsg(msgExito);
+
             setTimeout(() => {
                 setShowModal(false);
-                setConfirmMessage("");
+                setModalSuccessMsg(null);
+                if (typeof onSubastaActualizada === "function") {
+                    onSubastaActualizada();
+                } else {
+                    window.location.reload();
+                }
             }, 2500);
-        }, 1000);
+
+        } catch (err) {
+            setModalErrorMsg(err.message || "Error al procesar la oferta.");
+
+            setTimeout(() => {
+                setShowModal(false);
+                setModalErrorMsg(null);
+            }, 2500);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    // Función auxiliar para texto del Badge de Estado
     const getBadgeText = (st) => {
         switch (st) {
             case 1: return "Próximamente";
@@ -141,13 +175,13 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
             {/* COLUMNA 1: IMAGEN Y DESCRIPCIÓN */}
             <div className="columna1">
                 <div className="titulo">
-                    <h3>Categoria : {categoriaNombre}</h3>
+                    <h3>Categoría: {categoriaNombre}</h3>
                     <h2>{titulo}</h2>
                 </div>
                 <div className="item-detail__image">
                     <img src={urlImagen || "/images/placeholder.png"} alt={titulo} />
-                    <div className={`status-badge-detail estado-${estadoNum}`}>
-                        {getBadgeText(estadoNum)}
+                    <div className={`status-badge-detail estado-${estado}`}>
+                        {getBadgeText(estado)}
                     </div>
                 </div>
                 <div className="description-section">
@@ -158,10 +192,9 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
 
             {/* COLUMNA 2: INFORMACIÓN PRINCIPAL Y CONSOLA */}
             <div className="product-price-pay">
-                <h3 className="product-price__vendedor">Vendedor: {vendedorNombre || "Anónimo"}</h3>
-                
-                {/* TEMPORIZADOR SEGÚN CADA ESTADO */}
-                {estadoNum === 1 && (
+                <h3 className="product-price__vendedor">Vendedor: {vendedorNombre}</h3>
+
+                {estado === 1 && (
                     <div className="timer-banner timer-upcoming">
                         <FontAwesomeIcon icon={faClock} />
                         <span>
@@ -172,7 +205,7 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                     </div>
                 )}
 
-                {estadoNum === 2 && !timeLeft.isEnded && (
+                {estado === 2 && !timeLeft.isEnded && (
                     <div className={`timer-banner ${timeLeft.isCritical ? "timer-critical" : ""}`}>
                         <FontAwesomeIcon icon={faClock} />
                         <span>
@@ -181,14 +214,14 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                     </div>
                 )}
 
-                {estadoNum === 3 && (
+                {estado === 3 && (
                     <div className="timer-banner timer-ended">
                         <FontAwesomeIcon icon={faClock} />
                         <span>Subasta Finalizada - Con Ganador</span>
                     </div>
                 )}
 
-                {(estadoNum === 4 || (estadoNum === 2 && timeLeft.isEnded)) && (
+                {(estado === 4 || (estado === 2 && timeLeft.isEnded)) && (
                     <div className="timer-banner timer-deserted">
                         <FontAwesomeIcon icon={faBan} />
                         <span>Subasta Desierta - Sin Ofertas</span>
@@ -196,8 +229,6 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                 )}
 
                 <div className="container-price">
-                    
-
                     <div className="price-main">
                         <span className="price-label">
                             {cantidadOfertas > 0 ? "Oferta Más Alta Actual:" : "Precio Base de Salida:"}
@@ -205,71 +236,86 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                         <p className="item-detail__price">{formatCurrency(precioActual)}</p>
                     </div>
 
-                    {estadoNum === 2 && (
-                        <div className={`leader-badge ${esMiOfertaLaMasAlta ? "badge-leading" : "badge-outbid"}`}>
-                            <FontAwesomeIcon icon={esMiOfertaLaMasAlta ? faUserCheck : faExclamationTriangle} />
-                            <span>{esMiOfertaLaMasAlta ? "¡Vas Liderando!" : "Fuiste Superado"}</span>
-                        </div>
-                    )}
+                    {/* Cartel directo respaldado por CompradorLiderId */}
+                    {user?.usuarioId && estado === 2 && cantidadOfertas > 0 ? (
+                        user?.usuarioId === compradorLiderId ? (
+                            <div className="badge-leading">
+                                <FontAwesomeIcon icon={faUserCheck} />
+                                <span>Vas Liderando</span>
+                            </div>
+                        ) : (
+                            <div className="badge-outbid">
+                                <FontAwesomeIcon icon={faExclamationTriangle} />
+                                <span> Fuiste Superado</span>
+                            </div>
+                        )
+                    ) : null}
                 </div>
 
-                {estadoNum === 2 && !timeLeft.isEnded ? (
-                    <form onSubmit={handleFormSubmit} className="bidding-console">
-                        <label>
-                            Tu Oferta Directa (Mínimo: <strong>{formatCurrency(pujaMinimaSugerida)}</strong>):
-                        </label>
-                        <div className="bidding-input-group">
-                            <span className="currency-symbol">$</span>
-                            <input
-                                type="number"
-                                value={montoOferta}
-                                min={pujaMinimaSugerida}
-                                onChange={(e) => setMontoOferta(Number(e.target.value))}
-                                required
-                            />
-                            <button type="submit" className="btn-bid-submit">
-                                <FontAwesomeIcon icon={faGavel} /> Realizar Puja
-                            </button>
-                        </div>
+                {estado === 2 && !timeLeft.isEnded ? (
+                    user?.usuarioId ? (
+                        <form onSubmit={handleFormSubmit} className="bidding-console">
+                            <label>
+                                Tu Oferta Directa (Mínimo: <strong>{formatCurrency(pujaMinimaSugerida)}</strong>):
+                            </label>
+                            <div className="bidding-input-group">
+                                <span className="currency-symbol">$</span>
+                                <input
+                                    type="number"
+                                    value={montoOferta}
+                                    
+                                    onChange={(e) => setMontoOferta(Number(e.target.value))}
+                                    required
+                                />
+                                <button type="submit" className="btn-bid-submit">
+                                    <FontAwesomeIcon icon={faGavel} /> Realizar Puja
+                                </button>
+                            </div>
 
-                        <div className="quick-bids">
-                            <span>Suma rápida:</span>
-                            <button type="button" onClick={() => handleQuickAdd(incrementoMinimo)}>
-                                +{formatCurrency(incrementoMinimo)}
-                            </button>
-                            <button type="button" onClick={() => handleQuickAdd(5000)}>+$5.000</button>
-                            <button type="button" onClick={() => handleQuickAdd(10000)}>+$10.000</button>
+                            <div className="quick-bids">
+                                <span>Suma rápida:</span>
+                                <button type="button" onClick={() => handleQuickAdd(incrementoMinimo)}>
+                                    +{formatCurrency(incrementoMinimo)}
+                                </button>
+                                <button type="button" onClick={() => handleQuickAdd(5000)}>+$5.000</button>
+                                <button type="button" onClick={() => handleQuickAdd(10000)}>+$10.000</button>
+                            </div>
+                        </form>
+                    ) : (
+                        <div className="closed-auction-notice solicitud-login">
+                            <FontAwesomeIcon className="icono-secion"  icon={faLock} size="2x" />
+                            <p>Debes <Link to="/login" className="link-secion">iniciar sesión</Link> para realizar una oferta.</p>
                         </div>
-                    </form>
+                    )
                 ) : (
                     <div className="closed-auction-notice">
-                        <FontAwesomeIcon icon={estadoNum === 4 ? faBan : faLock} size="2x" />
+                        <FontAwesomeIcon icon={estado === 4 ? faBan : faLock} size="2x" />
                         <p>
-                            {estadoNum === 1 && "Esta subasta aún no ha comenzado."}
-                            {estadoNum === 3 && "Esta subasta ya finalizó. No se aceptan más ofertas."}
-                            {estadoNum === 4 && "Esta subasta finalizó sin ofertas recibidas (Desierta)."}
-                            {estadoNum === 2 && timeLeft.isEnded && "El tiempo reglamentario ha concluido."}
+                            {estado === 1 && "Esta subasta aún no ha comenzado."}
+                            {estado === 3 && "Esta subasta ya finalizó. No se aceptan más ofertas."}
+                            {estado === 4 && "Esta subasta finalizó sin ofertas recibidas (Desierta)."}
+                            {estado === 2 && timeLeft.isEnded && "El tiempo reglamentario ha concluido."}
                         </p>
                     </div>
                 )}
 
                 <div className="bids-history-section">
                     <h4>
-                        <FontAwesomeIcon icon={faHistory} /> Historial de Ofertas ({ofertasList.length || cantidadOfertas})
+                        <FontAwesomeIcon icon={faHistory} /> Historial de Ofertas ({historialPujas.length})
                     </h4>
-                    {ofertasList.length > 0 ? (
+                    {historialPujas.length > 0 ? (
                         <ul className="bids-list">
-                            {ofertasList.map((bid, index) => (
+                            {historialPujas.map((bid, index) => (
                                 <li key={bid.id || index} className={index === 0 ? "top-bid" : ""}>
                                     <div className="bid-info-main">
                                         <span className="bid-user">
-                                            {bid.compradorSeudonimo || bid.usuarioPseudonimo || `Comprador #${bid.compradorId || index + 1}`}
+                                            {bid.compradorSeudonimo || `Comprador #${bid.compradorId}`}
                                         </span>
                                         <span className="bid-amount">{formatCurrency(bid.monto)}</span>
                                     </div>
                                     <span className="bid-time">
-                                        {bid.fechaPuja || bid.fechaHora
-                                            ? new Date(bid.fechaPuja || bid.fechaHora).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })
+                                        {bid.fechaPuja
+                                            ? new Date(bid.fechaPuja).toLocaleString("es-AR", { dateStyle: "short", timeStyle: "short" })
                                             : "Reciente"}
                                     </span>
                                 </li>
@@ -281,10 +327,10 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                 </div>
             </div>
 
-            {/* COLUMNA 3: HISTORIAL Y GARANTÍAS */}
+            {/* COLUMNA 3: GARANTÍAS Y REDES */}
             <div className="product-information">
                 <div className="logo-empresa">
-                    <img src="../../public/images/Logo/iconoEmpresa2.jpg"/>
+                    <img src="/images/Logo/iconoEmpresa2.jpg" alt="SubastaYa Logo" />
                 </div>
                 <div className="info-pay">
                     <div className="info-pay_item">
@@ -314,24 +360,33 @@ export const ItemDetail = ({ detail, historialPujas = [] }) => {
                     <h3>Comparte esta subasta</h3>
                     <div className="share-product-imgRedes">
                         <Link className="item-share" to="https://facebook.com" target="_blank">
-                            <img src="../../images/RedesSociales/Facebook.png" alt="Facebook" />
+                            <img src="/images/RedesSociales/Facebook.png" alt="Facebook" />
                         </Link>
                         <Link className="item-share" to="https://instagram.com" target="_blank">
-                            <img src="../../images/RedesSociales/Instagram.png" alt="Instagram" />
+                            <img src="/images/RedesSociales/Instagram.png" alt="Instagram" />
                         </Link>
                         <Link className="item-share" to="https://twitter.com" target="_blank">
-                            <img src="../../images/RedesSociales/Twitter-nuevo.png" alt="Twitter" />
+                            <img src="/images/RedesSociales/Twitter-nuevo.png" alt="Twitter" />
                         </Link>
                     </div>
                 </div>
             </div>
 
-            {/* MODAL REUTILIZABLE DE CONFIRMACIÓN */}
+            {/* MODAL REUTILIZABLE */}
             {showModal && (
                 <ConfirmModal
-                    title="Confirmar Puja en Vivo"
+                    title={
+                        modalErrorMsg
+                            ? "Error en la Oferta"
+                            : modalSuccessMsg
+                                ? "¡Oferta Aceptada!"
+                                : "Confirmar Puja en Vivo"
+                    }
                     prompt={`Estás a punto de realizar una oferta por ${formatCurrency(montoOferta)} en "${titulo}".`}
-                    message={confirmMessage}
+                    warningText="Se debitará el dinero de tu Billetera Virtual de forma segura."
+                    confirmText="Confirmar Oferta"
+                    message={modalSuccessMsg}
+                    errorMessage={modalErrorMsg}
                     onConfirm={handleConfirmBid}
                     onCancel={() => setShowModal(false)}
                     isSubmitting={isSubmitting}

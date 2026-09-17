@@ -1,15 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faBars, 
-  faTimes, 
-  faUser, 
-  faRightFromBracket, 
-  faChevronDown, 
-  faGavel, 
-  faBoxes, 
-  faWallet 
+import { faPlusCircle, faPlus, faTag } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faTimes,
+  faUser,
+  faRightFromBracket,
+  faChevronDown,
+  faGavel,
+  faBoxes,
+  faWallet
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthContext";
 import "./Header.css";
@@ -71,11 +72,6 @@ export const Header = () => {
                 </Link>
               </li>
               <li>
-                <Link className="nav-item" to={"/products"} onClick={closeAllMenus}>
-                  Subastas
-                </Link>
-              </li>
-              <li>
                 <Link className="nav-item" to={"/contact"} onClick={closeAllMenus}>
                   Contacto
                 </Link>
@@ -119,6 +115,13 @@ export const Header = () => {
                     >
                       <FontAwesomeIcon icon={faWallet} /> Mi Billetera
                     </Link>
+                    <Link
+                      to="/mi-panel?tab=crear"
+                      className="dropdown-item"
+                      onClick={closeAllMenus}
+                    >
+                      <FontAwesomeIcon icon={faPlus} /> Crear Subasta
+                    </Link>
                     <div className="dropdown-divider"></div>
                     <button className="dropdown-item logout" onClick={handleLogout}>
                       <FontAwesomeIcon icon={faRightFromBracket} /> Salir
@@ -128,14 +131,14 @@ export const Header = () => {
               ) : (
                 <>
                   <li className="li-login">
-                    <Link className="nav-item nav-auth nav-login" to={"/login"} onClick={closeAllMenus}>
-                      Ingresar
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="nav-item nav-auth nav-register" to={"/registro"} onClick={closeAllMenus}>
-                      Registrarse
-                    </Link>
+                    <div>
+                      <Link className="nav-item nav-auth nav-login" to={"/login"} onClick={closeAllMenus}>
+                        Ingresar
+                      </Link>
+                      <Link className="nav-item nav-auth nav-register" to={"/registro"} onClick={closeAllMenus}>
+                        Registrarse
+                      </Link>
+                    </div>
                   </li>
                 </>
               )}

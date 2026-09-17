@@ -99,12 +99,12 @@ export const MisPujas = () => {
                       {estadoNombre}
                     </span>
                   </td>
-                  <td>
+                  <td id="td-resultado">
                     {estadoNombre === "Activa" ? (
                       user?.usuarioId === subasta.compradorLiderId ? (
-                        <span className="activa_ganando">Vas Ganando</span>
+                        <span className="activa_ganando">Ganando...</span>
                       ) : (
-                        <span className="activa_superada">Te superaron</span>
+                        <span className="activa_superada">Perdiendo...</span>
                       )
                     ) : estadoNombre === "Finalizada" ? (
                       user?.usuarioId === subasta.compradorLiderId ? (

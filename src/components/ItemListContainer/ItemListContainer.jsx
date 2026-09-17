@@ -17,7 +17,7 @@ export const ItemListContainer = () => {
     const categoriasDisponibles = [
         { id: 1, nombre: "Tecnología" },
         { id: 2, nombre: "Coleccionables" },
-        { id: 3, nombre: "Hogar" },
+        { id: 3, nombre: "Indumentaria" },
         { id: 4, nombre: "Vehículos" }
     ];
 
