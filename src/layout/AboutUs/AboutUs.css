@@ -208,6 +208,13 @@
     border: 1px solid #2e2e54;
 }
 
+.aboutUs-hero > h1 > span{
+    font-style: italic;
+    color: rgb(199, 56, 4);
+    font-weight: 800;
+    display: inline;
+}
+
 .aboutUs-badge {
     display: inline-flex;
     align-items: center;

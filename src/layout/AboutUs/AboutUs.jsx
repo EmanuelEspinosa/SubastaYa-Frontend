@@ -17,7 +17,7 @@ export const AboutUs = () => {
                 <span className="aboutUs-badge">
                     <FontAwesomeIcon icon={faGavel} /> Subastas Transparentes y Seguras
                 </span>
-                <h1 className="title-aboutUs">Sobre SubastaYA</h1>
+                <h1 className="title-aboutUs">Sobre Subasta<span>YA</span></h1>
                 <p className="subtitle-aboutUs">
                     Democratizamos el comercio en vivo conectando a compradores y vendedores a través de pujas dinámicas, auditadas y 100% confiables.
                 </p>
