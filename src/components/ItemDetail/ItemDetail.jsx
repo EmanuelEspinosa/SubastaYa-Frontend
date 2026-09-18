@@ -54,6 +54,13 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
     const [modalErrorMsg, setModalErrorMsg] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const parseUtcDate = (dateStr) => {
+        if (!dateStr) return null;
+        return (dateStr.endsWith("Z") || dateStr.includes("+"))
+            ? new Date(dateStr)
+            : new Date(`${dateStr}Z`);
+    };
+
     // Actualiza el monto cuando cambia el precio actual
     useEffect(() => {
         setMontoOferta(pujaMinimaSugerida);
@@ -69,7 +76,7 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
 
         const interval = setInterval(() => {
             const now = new Date().getTime();
-            const target = new Date(fechaFin).getTime();
+            const target = parseUtcDate(fechaFin)?.getTime();
             const difference = target - now;
 
             if (difference <= 0) {
@@ -237,19 +244,19 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
                     </div>
 
                     {/* Cartel directo respaldado por CompradorLiderId */}
-                    {user?.usuarioId && estado === 2 && cantidadOfertas > 0 ? (
-                        user?.usuarioId === compradorLiderId ? (
+                    {user?.usuarioId && estado === 2 && cantidadOfertas > 0 && (
+                        esMiOfertaLaMasAlta ? (
                             <div className="badge-leading">
                                 <FontAwesomeIcon icon={faUserCheck} />
                                 <span>Vas Liderando</span>
                             </div>
-                        ) : (
+                        ) : haOfertadoElUsuario ? (
                             <div className="badge-outbid">
                                 <FontAwesomeIcon icon={faExclamationTriangle} />
                                 <span> Fuiste Superado</span>
                             </div>
-                        )
-                    ) : null}
+                        ) : null
+                    )}
                 </div>
 
                 {estado === 2 && !timeLeft.isEnded ? (
@@ -263,7 +270,7 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
                                 <input
                                     type="number"
                                     value={montoOferta}
-                                    
+
                                     onChange={(e) => setMontoOferta(Number(e.target.value))}
                                     required
                                 />
@@ -283,7 +290,7 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
                         </form>
                     ) : (
                         <div className="closed-auction-notice solicitud-login">
-                            <FontAwesomeIcon className="icono-secion"  icon={faLock} size="2x" />
+                            <FontAwesomeIcon className="icono-secion" icon={faLock} size="2x" />
                             <p>Debes <Link to="/login" className="link-secion">iniciar sesión</Link> para realizar una oferta.</p>
                         </div>
                     )

@@ -22,6 +22,13 @@ export const Billetera = () => {
   const [modalSuccessMsg, setModalSuccessMsg] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState(null);
 
+  const parseUtcDate = (dateStr) => {
+    if (!dateStr) return null;
+    return (dateStr.endsWith("Z") || dateStr.includes("+"))
+      ? new Date(dateStr)
+      : new Date(`${dateStr}Z`);
+  };
+
   // ===== 2. NUEVOS ESTADOS (para el historial) =====
   const [transacciones, setTransacciones] = useState([]); // Guarda la lista de movimientos
   const [loadingHistorial, setLoadingHistorial] = useState(true); // Controla el spinner de la tabla
@@ -73,11 +80,11 @@ export const Billetera = () => {
 
     try {
       await cargarSaldo(user.usuarioId, montoRecarga);
-      
+
       const msgExito = `¡Transacción realizada con éxito! Se acreditaron $${Number(montoRecarga).toLocaleString("es-AR")}.`;
       setModalSuccessMsg(msgExito);
       setMontoRecarga("");
-      
+
       // ===== 5. CLAVE: Refrescamos saldos Y el historial =====
       await cargarDatos();
       await cargarHistorial(); // <-- Aparece el nuevo movimiento automáticamente
@@ -113,7 +120,7 @@ export const Billetera = () => {
 
   return (
     <div className="billetera-module">
-      
+
       {/* ============ COLUMNA IZQUIERDA: Saldos y Recarga ============ */}
       <div className="billetera-left-col">
         <div className="saldos-wallet">
@@ -191,7 +198,7 @@ export const Billetera = () => {
       {/* ============ COLUMNA DERECHA: Historial de Movimientos ============ */}
       <div className="historial-card">
         <h4 className="recarga-title">Historial de Movimientos</h4>
-        
+
         {loadingHistorial ? (
           <p className="loading-historial">Cargando movimientos...</p>
         ) : transacciones.length === 0 ? (
@@ -212,7 +219,7 @@ export const Billetera = () => {
                 {transacciones.map((t) => (
                   <tr key={t.id}>
                     <td className="fecha-td">
-                      {new Date(t.fecha).toLocaleString("es-AR", {
+                      {new Date(parseUtcDate(t.fecha)).toLocaleString("es-AR", {
                         dateStyle: "short",
                         timeStyle: "short"
                       })}
@@ -223,7 +230,7 @@ export const Billetera = () => {
                       </span>
                     </td>
                     <td className={`monto-td ${t.tipo === 1 || t.tipo === 3 || t.tipo === 5 ? "monto-positivo" : "monto-negativo"}`}>
-                      {t.tipo === 1 || t.tipo === 3 || t.tipo === 5 ? "+" : "-"} 
+                      {t.tipo === 1 || t.tipo === 3 || t.tipo === 5 ? "+" : "-"}
                       {formatCurrency(t.monto)}
                     </td>
                     <td className="subasta-td">
@@ -244,8 +251,8 @@ export const Billetera = () => {
             modalErrorMsg
               ? "Error en la Recarga"
               : modalSuccessMsg
-              ? "Recarga Exitosa"
-              : "Confirmar Recarga"
+                ? "Recarga Exitosa"
+                : "Confirmar Recarga"
           }
           prompt={`¿Estás seguro de cargar $${Number(montoRecarga || 0).toLocaleString("es-AR")} en tu Billetera Virtual?`}
           warningText="El saldo estará disponible de forma inmediata en tu cuenta."

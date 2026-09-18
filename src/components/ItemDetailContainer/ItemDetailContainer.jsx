@@ -31,7 +31,7 @@ export const ItemDetailContainer = () => {
         return (
             <div className="detail-status-container">
                 <div className="spinner"></div>
-                <p>Cargando sala de subasta en vivo...</p>
+                <p className="cargando-sala">Cargando sala de subasta en vivo...</p>
             </div>
         );
     }

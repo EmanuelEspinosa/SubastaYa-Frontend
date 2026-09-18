@@ -40,7 +40,7 @@ export const MisPujas = () => {
     return (
       <div className="pujas-empty">
         <p className="pujas-empty-text">Aún no participaste en ninguna subasta.</p>
-        <Link to="/products" className="btn-explorar">
+        <Link to="/" className="btn-explorar">
           Explorar Subastas
         </Link>
       </div>
