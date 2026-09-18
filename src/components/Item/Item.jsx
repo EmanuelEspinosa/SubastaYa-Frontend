@@ -47,12 +47,19 @@ export const Item = ({
         isEnded: false
     });
 
+    const parseUtcDate = (dateStr) => {
+        if (!dateStr) return null;
+        return (dateStr.endsWith("Z") || dateStr.includes("+"))
+            ? new Date(dateStr)
+            : new Date(`${dateStr}Z`);
+    };
+
     useEffect(() => {
         if (estado !== 2 || !fechaFin) return;
 
         const interval = setInterval(() => {
             const now = new Date().getTime();              // Momento actual
-            const target = new Date(fechaFin).getTime();   // Fecha fin enviada por la API
+            const target = parseUtcDate(fechaFin)?.getTime();   // Fecha fin enviada por la API
             const difference = target - now;               // Milisegundos restantes
 
             if (difference <= 0) {
