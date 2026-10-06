@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ItemDetail } from "../ItemDetail/ItemDetail";
 import { getSubastaById, getHistorialPujas } from "../../services/subastaService";
+import { ItemDetail } from "../ItemDetail/ItemDetail";
 
 export const ItemDetailContainer = () => {
     const [subasta, setSubasta] = useState(null);
@@ -10,8 +10,10 @@ export const ItemDetailContainer = () => {
     const [error, setError] = useState(null);
     const { id } = useParams();
 
-    useEffect(() => {
-        setLoading(true);
+    // Función memorizada para actualizar la sala sin mostrar pantalla de carga continua
+    const cargarDatosSala = useCallback((esCargaInicial = false) => {
+        if (esCargaInicial) setLoading(true);
+
         Promise.all([getSubastaById(id), getHistorialPujas(id)])
             .then(([subastaData, pujasData]) => {
                 setSubasta(subastaData);
@@ -19,13 +21,32 @@ export const ItemDetailContainer = () => {
                 setError(null);
             })
             .catch((err) => {
-                console.error("Error al cargar la sala de subasta:", err);
-                setError("No se pudo cargar la subasta solicitada.");
+                console.error("Error al refrescar la sala de subasta:", err);
+                if (esCargaInicial) {
+                    setError("No se pudo cargar la subasta solicitada.");
+                }
             })
             .finally(() => {
-                setLoading(false);
+                if (esCargaInicial) setLoading(false);
             });
     }, [id]);
+
+    // 1. Carga inicial al entrar
+    useEffect(() => {
+        cargarDatosSala(true);
+    }, [cargarDatosSala]);
+
+    // 2. POLLING / SINCRONIZACIÓN EN TIEMPO REAL (Resuelve F13)
+    // Consulta al servidor cada 2 segundos para sincronizar ofertas de otros compradores en vivo
+    useEffect(() => {
+        if (!id) return;
+
+        const interval = setInterval(() => {
+            cargarDatosSala(false);
+        }, 2000); // 2 segundos
+
+        return () => clearInterval(interval);
+    }, [id, cargarDatosSala]);
 
     if (loading) {
         return (
@@ -48,7 +69,11 @@ export const ItemDetailContainer = () => {
 
     return (
         <main className="detail-main-wrapper">
-            <ItemDetail detail={subasta} historialPujas={pujas} />
+            <ItemDetail 
+                detail={subasta} 
+                historialPujas={pujas} 
+                onSubastaActualizada={() => cargarDatosSala(false)}
+            />
         </main>
     );
 };
