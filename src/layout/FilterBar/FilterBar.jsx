@@ -13,6 +13,7 @@ export const FilterBar = ({
     setSortOrder,
     sortOrder,
     products,
+    totalResults,
     estados
 }) => {
     const [showFilters, setShowFilters] = useState(false);
@@ -85,10 +86,10 @@ export const FilterBar = ({
                     <div className="results-count">
                         {categoriaId ? (
                             <p>
-                                <strong>{products.length} {products.length === 1 ? "resultado" : "resultados"}</strong> para esta categoría
+                                <strong>{totalResults ?? products.length} {((totalResults ?? products.length) === 1) ? "resultado" : "resultados"}</strong> para esta categoría
                             </p>
                         ) : (
-                            <p>Mostrando <strong>{products.length} subastas</strong></p>
+                            <p>Mostrando <strong>{totalResults ?? products.length} subastas</strong></p>
                         )}
                     </div>
                 </div>

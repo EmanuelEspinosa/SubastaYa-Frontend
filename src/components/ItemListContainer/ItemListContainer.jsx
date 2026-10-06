@@ -3,16 +3,18 @@ import { Link, useSearchParams } from "react-router-dom";
 import { ItemList } from "../ItemList/ItemList";
 import { Pagination } from "../../layout/Pagination/Pagination";
 import { FilterBar } from "../../layout/FilterBar/FilterBar";
-import { getSubastas } from "../../services/subastaService"; 
+import { getSubastas } from "../../services/subastaService";
 import "./ItemListContainer.css";
 
 export const ItemListContainer = () => {
     const [subastas, setSubastas] = useState([]);
+    const [totalResults, setTotalResults] = useState(0);
+    const [totalPaginas, setTotalPaginas] = useState(1);
     const [paginaActual, setPaginaActual] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
+    const [debouncedSearch, setDebouncedSearch] = useState("");
     const [sortOrder, setSortOrder] = useState("sin_filtrar");
 
-    // Leemos los filtros activos desde la Query String de la URL
     const [searchParams] = useSearchParams();
     const categoriaId = searchParams.get("categoriaId");
     const estId = searchParams.get("estado");
@@ -23,62 +25,42 @@ export const ItemListContainer = () => {
         { id: 3, nombre: "Indumentaria" },
         { id: 4, nombre: "Vehículos" }
     ];
-
     const estados = [
         { id: 1, nombre: "Programada" },
         { id: 2, nombre: "Activa" },
         { id: 3, nombre: "Finalizada" },
         { id: 4, nombre: "Desierta" }
     ];
-
     const categoriaNombreActual = categoriasDisponibles.find(
         (c) => c.id === Number(categoriaId)
     )?.nombre;
 
     useEffect(() => {
-        setPaginaActual(1);
-        
-        // Enviamos tanto la categoría como el estado simultáneamente a la API
-        getSubastas(
-            categoriaId ? Number(categoriaId) : null,
-            null,
-            null,
-            estId ? Number(estId) : null
-        )
+        const t = setTimeout(() => setDebouncedSearch(searchTerm), 350);
+        return () => clearTimeout(t);
+    }, [searchTerm]);
+
+    // Catálogo 100% server-side (B11): filtros, búsqueda, orden y paginación
+    useEffect(() => {
+        getSubastas({
+            categoriaId: categoriaId ? Number(categoriaId) : null,
+            estado: estId ? Number(estId) : null,
+            q: debouncedSearch || null,
+            orderBy: sortOrder === "sin_filtrar" ? "fechaFin" : "oferta",
+            order: sortOrder === "sin_filtrar" ? "asc" : sortOrder,
+            page: paginaActual,
+            pageSize: 6
+        })
             .then((data) => {
-                if (data && data.length > 0) {
-                    setSubastas(data);
-                } else {
-                    setSubastas([]);
-                }
+                setSubastas(Array.isArray(data.items) ? data.items : []);
+                setTotalResults(data.total ?? 0);
+                setTotalPaginas(data.totalPaginas ?? 1);
             })
             .catch((err) => {
                 console.error("Error al obtener subastas de la API:", err);
-                setSubastas([]);
+                setSubastas([]); setTotalResults(0); setTotalPaginas(1);
             });
-    }, [categoriaId, estId]);
-
-    // Filtrado local por buscador de texto
-    let filteredAuctions = searchTerm === "" 
-        ? subastas 
-        : subastas.filter((s) =>
-            (s.titulo && s.titulo.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (s.descripcion && s.descripcion.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (s.categoriaNombre && s.categoriaNombre.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-
-    // Ordenamiento local por monto
-    if (sortOrder === "asc") {
-        filteredAuctions = [...filteredAuctions].sort((a, b) => a.ofertaMasAltaActual - b.ofertaMasAltaActual);
-    } else if (sortOrder === "desc") {
-        filteredAuctions = [...filteredAuctions].sort((a, b) => b.ofertaMasAltaActual - a.ofertaMasAltaActual);
-    }
-
-    // Paginado
-    const subastasPorPagina = 6;
-    const indiceInicial = (paginaActual - 1) * subastasPorPagina;
-    const indiceFinal = indiceInicial + subastasPorPagina;
-    const subastasVisibles = filteredAuctions.slice(indiceInicial, indiceFinal);
+    }, [categoriaId, estId, debouncedSearch, sortOrder, paginaActual]);
 
     return (
         <section id="products" className="sectionProducts">
@@ -86,7 +68,7 @@ export const ItemListContainer = () => {
                 <div className="breadcrumb">
                     {categoriaId ? (
                         <p>
-                            <Link className="breadcrumb-link" to={'/'}>Inicio</Link> / 
+                            <Link className="breadcrumb-link" to={'/'}>Inicio</Link> /
                             <Link className="breadcrumb-link" to={"/"}> Subastas</Link> / {categoriaNombreActual || `Categoría ${categoriaId}`}
                         </p>
                     ) : (
@@ -95,7 +77,6 @@ export const ItemListContainer = () => {
                         </p>
                     )}
                 </div>
-
                 <FilterBar
                     categorias={categoriasDisponibles}
                     setPageActual={setPaginaActual}
@@ -103,20 +84,18 @@ export const ItemListContainer = () => {
                     setSearch={setSearchTerm}
                     sortOrder={sortOrder}
                     setSortOrder={setSortOrder}
-                    products={filteredAuctions}
+                    products={subastas}
+                    totalResults={totalResults}
                     estados={estados}
                 />
-
                 <div className="products-container">
                     <div className="listproducts">
-                        <ItemList list={subastasVisibles} />
+                        <ItemList list={subastas} />
                     </div>
-
                     <Pagination
-                        products={filteredAuctions}
+                        totalPages={totalPaginas}
                         paginaActual={paginaActual}
                         setPaginaActual={setPaginaActual}
-                        productosPorPagina={subastasPorPagina}
                     />
                 </div>
             </div>

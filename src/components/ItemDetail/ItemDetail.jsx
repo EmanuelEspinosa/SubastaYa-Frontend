@@ -141,13 +141,11 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
 
             setModalSuccessMsg(msgExito);
 
-            setTimeout(() => {
+              setTimeout(() => {
                 setShowModal(false);
                 setModalSuccessMsg(null);
                 if (typeof onSubastaActualizada === "function") {
-                    onSubastaActualizada();
-                } else {
-                    window.location.reload();
+                    onSubastaActualizada();   // el contenedor SIEMPRE lo pasa hoy
                 }
             }, 2500);
 
