@@ -1,7 +1,7 @@
 // src/services/walletService.js
 import { API_BASE_URL } from "./apiConfig";
 
-const API_URL = `${API_BASE_URL}/wallet`;
+const API_URL = `${API_BASE_URL}/wallets`;
 
 /**
  * Obtiene la billetera completa del usuario (BilleteraDto).
