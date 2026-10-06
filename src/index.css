@@ -19,3 +19,12 @@
   list-style: none;
   font-family: "Noto Sans", sans-serif;
 }
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #00bfff;
+  outline-offset: 2px;
+}
