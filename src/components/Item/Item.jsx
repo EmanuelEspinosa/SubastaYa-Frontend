@@ -40,6 +40,7 @@ export const Item = ({
     const { texto: estadoTexto, clase: estadoClase } = getEstadoInfo(estado);
 
     const [timeLeft, setTimeLeft] = useState({
+        days: "0",
         hours: "00",
         minutes: "00",
         seconds: "00",
@@ -64,14 +65,16 @@ export const Item = ({
 
             if (difference <= 0) {
                 clearInterval(interval);
-                setTimeLeft({ hours: "00", minutes: "00", seconds: "00", isCritical: false, isEnded: true });
+                setTimeLeft({ days: "0", hours: "00", minutes: "00", seconds: "00", isCritical: false, isEnded: true });
             } else {
+                const d = Math.floor(difference / (1000 * 60 * 60 * 24));
                 const h = Math.floor((difference / (1000 * 60 * 60)) % 24);
                 const m = Math.floor((difference / 1000 / 60) % 60);
                 const s = Math.floor((difference / 1000) % 60);
 
                 // Guarda los valores formateados en el estado
                 setTimeLeft({
+                    days: `${d}`,
                     hours: h < 10 ? `0${h}` : `${h}`,
                     minutes: m < 10 ? `0${m}` : `${m}`,
                     seconds: s < 10 ? `0${s}` : `${s}`,
@@ -94,7 +97,7 @@ export const Item = ({
                 {estado === 2 && !timeLeft.isEnded && (
                     <div className={`timer-banner timer-banner-item ${timeLeft.isCritical ? "timer-critical" : ""}`}>
                         <span>
-                            Tiempo Restante: {timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
+                            Tiempo Restante: {timeLeft.days > 0 ? `${timeLeft.days}d : ` : ""}{timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
                         </span>
                     </div>
                 )}

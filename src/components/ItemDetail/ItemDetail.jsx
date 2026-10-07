@@ -68,7 +68,7 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
 
     // Temporizador
     const [timeLeft, setTimeLeft] = useState({
-        hours: "00", minutes: "00", seconds: "00", isCritical: false, isEnded: estado === 3 || estado === 4
+        days: "0", hours: "00", minutes: "00", seconds: "00", isCritical: false, isEnded: estado === 3 || estado === 4
     });
 
     useEffect(() => {
@@ -83,12 +83,14 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
                 clearInterval(interval);
                 setTimeLeft({ hours: "00", minutes: "00", seconds: "00", isCritical: false, isEnded: true });
             } else {
+                const d = Math.floor(difference / (1000 * 60 * 60 * 24));
                 const h = Math.floor((difference / (1000 * 60 * 60)) % 24);
                 const m = Math.floor((difference / 1000 / 60) % 60);
                 const s = Math.floor((difference / 1000) % 60);
                 const totalSecondsLeft = Math.floor(difference / 1000);
 
                 setTimeLeft({
+                    days: `${d}`,
                     hours: h < 10 ? `0${h}` : `${h}`,
                     minutes: m < 10 ? `0${m}` : `${m}`,
                     seconds: s < 10 ? `0${s}` : `${s}`,
@@ -214,7 +216,7 @@ export const ItemDetail = ({ detail, historialPujas = [], onSubastaActualizada }
                     <div className={`timer-banner ${timeLeft.isCritical ? "timer-critical" : ""}`}>
                         <FontAwesomeIcon icon={faClock} />
                         <span>
-                            Tiempo Restante: {timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
+                            Tiempo Restante: {timeLeft.days > 0 ? `${timeLeft.days}d : ` : ""}{timeLeft.hours}h : {timeLeft.minutes}m : {timeLeft.seconds}s
                         </span>
                     </div>
                 )}

@@ -3,7 +3,12 @@ import { useParams, Link } from "react-router-dom";
 import { getSubastaById, getHistorialPujas } from "../../services/subastaService";
 import { ItemDetail } from "../ItemDetail/ItemDetail";
 
-const POLL_MS = 2500; // Rango 2–3 s exigido por la rúbrica F13
+export const ItemDetailContainer = () => {
+    const [subasta, setSubasta] = useState(null);
+    const [pujas, setPujas] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const { id } = useParams();
 
 export const ItemDetailContainer = () => {
     const [subasta, setSubasta] = useState(null);
