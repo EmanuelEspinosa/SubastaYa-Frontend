@@ -10,49 +10,42 @@ export const ItemDetailContainer = () => {
     const [error, setError] = useState(null);
     const { id } = useParams();
 
-export const ItemDetailContainer = () => {
-    const [subasta, setSubasta] = useState(null);
-    const [pujas, setPujas] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const { id } = useParams();
-    const vivo = useRef(true);
-
-    // Carga o refresca la sala sin pantallazo de carga continuo
-    const cargarSala = useCallback((esCargaInicial = false) => {
+    const cargarDatosSala = useCallback((esCargaInicial = false) => {
         if (esCargaInicial) setLoading(true);
+
         Promise.all([getSubastaById(id), getHistorialPujas(id)])
             .then(([subastaData, pujasData]) => {
-                if (!vivo.current) return;
                 setSubasta(subastaData);
                 setPujas(pujasData);
                 setError(null);
             })
             .catch((err) => {
                 console.error("Error al refrescar la sala de subasta:", err);
-                if (!vivo.current) return;
-                if (esCargaInicial) setError("No se pudo cargar la subasta solicitada.");
+                if (esCargaInicial) {
+                    setError("No se pudo cargar la subasta solicitada.");
+                }
             })
             .finally(() => {
-                if (vivo.current && esCargaInicial) setLoading(false);
+                if (esCargaInicial) setLoading(false);
             });
     }, [id]);
 
-    // 1. Carga inicial al entrar a la sala
+    // 1. Carga inicial al entrar
     useEffect(() => {
-        vivo.current = true;
-        cargarSala(true);
-        return () => { vivo.current = false; };
-    }, [cargarSala]);
+        cargarDatosSala(true);
+    }, [cargarDatosSala]);
 
-    // 2. POLLING F13: sincroniza pujas, líder, extensión y estado de OTRA sesión sin recargar
+    // 2. POLLING / SINCRONIZACIÓN EN TIEMPO REAL (Resuelve F13)
+    // Consulta al servidor cada 2 segundos para sincronizar ofertas de otros compradores en vivo
     useEffect(() => {
-        if (loading || error) return;
-        const t = setInterval(() => {
-            if (document.visibilityState === "visible") cargarSala(false);
-        }, POLL_MS);
-        return () => clearInterval(t);
-    }, [loading, error, cargarSala]);
+        if (!id) return;
+
+        const interval = setInterval(() => {
+            cargarDatosSala(false);
+        }, 2000); // 2 segundos
+
+        return () => clearInterval(interval);
+    }, [id, cargarDatosSala]);
 
     if (loading) {
         return (
@@ -75,10 +68,10 @@ export const ItemDetailContainer = () => {
 
     return (
         <main className="detail-main-wrapper">
-            <ItemDetail
-                detail={subasta}
-                historialPujas={pujas}
-                onSubastaActualizada={() => cargarSala(false)}
+            <ItemDetail 
+                detail={subasta} 
+                historialPujas={pujas} 
+                onSubastaActualizada={() => cargarDatosSala(false)}
             />
         </main>
     );
