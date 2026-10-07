@@ -34,7 +34,7 @@ export const Billetera = () => {
   const [loadingHistorial, setLoadingHistorial] = useState(true); // Controla el spinner de la tabla
 
   // ===== FUNCIÓN: Cargar saldos =====
-  const cargarDatos = async () => {
+ const cargarDatos = async (silencioso = false) => {
     if (!user?.usuarioId) return;
     try {
       const data = await getSaldo(user.usuarioId);
@@ -42,23 +42,29 @@ export const Billetera = () => {
     } catch (err) {
       console.error(err.message);
     } finally {
-      setLoading(false);
+      if (!silencioso) setLoading(false);
     }
   };
 
+
+
+
   // ===== 3. FUNCIÓN NUEVA: Cargar historial =====
-  const cargarHistorial = async () => {
+
+
+  const cargarHistorial = async (silencioso = false) => {
     if (!user?.usuarioId) return;
     try {
-      setLoadingHistorial(true);
+      if (!silencioso) setLoadingHistorial(true);
       const data = await getHistorialTransacciones(user.usuarioId);
-      setTransacciones(data); // Guardamos la lista que vino del backend
+      setTransacciones(data);
     } catch (err) {
       console.error("Error al cargar historial:", err.message);
     } finally {
-      setLoadingHistorial(false);
+      if (!silencioso) setLoadingHistorial(false);
     }
   };
+
 
   // ===== 4. useEffect: Cuando entra a la pantalla, pedimos saldos E historial =====
   useEffect(() => {
