@@ -61,12 +61,12 @@ export const Billetera = () => {
   };
 
   // ===== 4. useEffect: Cuando entra a la pantalla, pedimos saldos E historial =====
-useEffect(() => {
-  const t = setInterval(() => {
-    if (document.visibilityState === "visible") { cargarDatos(true); cargarHistorial(true); }
-  }, 3000);
-  return () => clearInterval(t);
-}, [user]);
+  useEffect(() => {
+    const t = setInterval(() => {
+      if (document.visibilityState === "visible") { cargarDatos(true); cargarHistorial(true); }
+    }, 3000);
+    return () => clearInterval(t);
+  }, [user]);
 
   const handleOpenModal = (e) => {
     e.preventDefault();
